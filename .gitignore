@@ -1,0 +1,37 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Windows
+*.obj
+*.sbr
+*.tlog
+*.log
+*.idb
+*.pdb
+*.lastbuildstate
+*.exe
+*.dll
+*.lib
+*.unsuccessfulbuild
+*.suo
+*.sdf
+*.opensdf
+*.rar
+*.filters
+*.user
+*.map
+*.bsc
+*.xml
+include/
+*.ipch
