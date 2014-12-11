@@ -23,9 +23,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include "includes.h"
+#include "funcs.h"
+#include "amf3.h"
+#include <conio.h>
 
 int main(int argc, char* argv[])
 {
+	for (int i = 0; i < 1000; ++i)
+	{
+		amf3object obj = amf3object();
+		amf3object data = amf3object();
+		obj["data"] = data;
+		data["teststuff"] = 238475;
+		amf3array array = amf3array();
+		for (int x = 0; x < 1000; x++)
+		{
+			amf3object dummy = amf3object();
+			dummy["data"] = string("test");
+			array.Add(dummy);
+		}
+		obj["test"] = "test";
+		data["array"] = array;
+		cout << i << endl;
+	}
+	getch();
 	return 0;
 }
 
