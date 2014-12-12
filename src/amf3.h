@@ -284,7 +284,7 @@ public:
 	amf3writer(char * stream);
 	~amf3writer(void);
 
-	bool CheckObjectTable(amf3object & obj)
+	bool CheckObjectTable(const amf3object & obj)
 	{
 		// TODO: Fix object tables
 		// 		map<int, amf3object>::const_iterator iter;
@@ -300,7 +300,7 @@ public:
 		return false;
 	}
 	void Write(Amf3TypeCode type);
-	void Write(amf3object & obj);
+	void Write(const amf3object & obj);
 	void Write(short integer);
 	void Write(char integer);
 	void Write(unsigned short integer);
@@ -314,10 +314,10 @@ public:
 	void TypelessWrite(double number);
 	void TypelessWrite(string str);
 	void WriteDictionary(amf3reflist<amf3object> * reflist);
-	void Write(amf3array * _array, amf3object & obj);
-	void Write(amf3objectmap * _object, amf3object & obj);
-	void TypelessWrite(amf3array * _array, amf3object & obj);
-	void TypelessWrite(amf3objectmap * _object, amf3object & obj);
+	void Write(amf3array * _array, const amf3object & obj);
+	void Write(amf3objectmap * _object, const amf3object & obj);
+	void TypelessWrite(amf3array * _array, const amf3object & obj);
+	void TypelessWrite(amf3objectmap * _object, const amf3object & obj);
 
 	amf3reflist<string> strlist;
 	amf3reflist<amf3object> objectlist;

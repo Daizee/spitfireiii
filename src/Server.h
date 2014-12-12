@@ -142,9 +142,9 @@ public:
 	void Shutdown();
 	int32_t CalcTroopSpeed(PlayerCity * city, stTroops & troops, int32_t starttile, int32_t endtile);
 
-	void SendObject(Client * c, amf3object & object);
+	void SendObject(Client * c, const amf3object & object);
 
-	void SendObject(connection * s, amf3object & object)
+	void SendObject(connection * s, const amf3object & object)
 	{
 		if (s == 0)
 			return;

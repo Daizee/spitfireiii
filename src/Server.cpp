@@ -136,7 +136,7 @@ Server::~Server()
 	pFCDefault->close();
 }
 
-void Server::SendObject(Client * c, amf3object & object)
+void Server::SendObject(Client * c, const amf3object & object)
 {
 	if ((!c) || (!c->m_connected) || (c->socket == 0))
 		return;

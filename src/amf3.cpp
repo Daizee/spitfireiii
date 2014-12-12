@@ -1026,7 +1026,7 @@ void amf3writer::Write(Amf3TypeCode type)
 	stream[position++] = type;
 }
 
-void amf3writer::Write(amf3object & obj)
+void amf3writer::Write(const amf3object & obj)
 {
 	if (obj.type == Null)
 	{
@@ -1111,12 +1111,12 @@ void amf3writer::Write(string str)
 	Write(String);
 	TypelessWrite(str);
 }
-void amf3writer::Write(amf3array * _array, amf3object & obj)
+void amf3writer::Write(amf3array * _array, const amf3object & obj)
 {
 	Write(Array);
 	TypelessWrite(_array, obj);
 }
-void amf3writer::Write(amf3objectmap * _object, amf3object & obj)
+void amf3writer::Write(amf3objectmap * _object, const amf3object & obj)
 {
 	Write(Object);
 	TypelessWrite(_object, obj);
@@ -1213,7 +1213,7 @@ void amf3writer::WriteDictionary(amf3reflist<amf3object> * reflist)
 	}
 	TypelessWrite("");
 }
-void amf3writer::TypelessWrite(amf3array * _array, amf3object & obj)
+void amf3writer::TypelessWrite(amf3array * _array, const amf3object & obj)
 {
 	if (CheckObjectTable(obj))
 		return;
@@ -1238,7 +1238,7 @@ void amf3writer::TypelessWrite(amf3array * _array, amf3object & obj)
 		Write(obj._array->dense.at(i));
 	}
 }
-void amf3writer::TypelessWrite(amf3objectmap * _object, amf3object & obj)
+void amf3writer::TypelessWrite(amf3objectmap * _object, const amf3object & obj)
 {
 	if (CheckObjectTable(obj))
 		return;
