@@ -920,6 +920,8 @@ void Server::stop(connection_ptr c)
 	try
 	{
 		connections_.erase(c);
+		boost::system::error_code ignored_ec;
+		c->socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
 		c->stop();
 	}
 	catch (std::exception& e)
