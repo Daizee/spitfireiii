@@ -3060,12 +3060,12 @@ void request_handler::handle_request(request& req, reply& rep)
 						std::vector<stPrereq>::const_iterator iterend = gserver->m_researchconfig[i][0].buildings.end();
 						while (iterbegin != gserver->m_researchconfig[i][0].buildings.end())
 						{
-							std::cerr << (int)&iterbegin << "\n";
+							std::cerr << (int64_t)&iterbegin << "\n";
 							iterbegin++;
 						}
 						for_each(gserver->m_researchconfig[i][0].buildings.begin(), gserver->m_researchconfig[i][0].buildings.end(), [&](stPrereq & req)
 						{
-							std::cerr << (int)&req << "\n";
+							std::cerr << (int64_t)&req << "\n";
 						});
 						for (stPrereq & req : gserver->m_researchconfig[i][0].buildings)
 						{
