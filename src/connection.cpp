@@ -118,12 +118,13 @@ void connection::handle_read_header(const boost::system::error_code& e,
 		{
 			if (!memcmp(buffer_.data(), "<c", 2) || !memcmp(buffer_.data(), "<p", 2))
 			{
-				boost::asio::async_write(socket_, boost::asio::buffer("<cross-domain-policy><allow-access-from domain=\"*\" to-ports=\"21-60000\" /></cross-domain-policy>\0"),
+				boost::asio::async_write(socket_, boost::asio::buffer("<cross-domain-policy><allow-access-from domain=\"*\" to-ports=\"21-60000\" /></cross-domain-policy>\n\r\0"),
 										 boost::bind(&connection::handle_write, shared_from_this(),
 										 boost::asio::placeholders::error));
-				boost::asio::async_read(socket_, boost::asio::buffer(buffer_, size), boost::bind(&connection::handle_read_header, shared_from_this(),
-					boost::asio::placeholders::error,
-					boost::asio::placeholders::bytes_transferred));
+				server.stop(shared_from_this());
+// 				boost::asio::async_read(socket_, boost::asio::buffer(buffer_, size), boost::bind(&connection::handle_read_header, shared_from_this(),
+// 					boost::asio::placeholders::error,
+// 					boost::asio::placeholders::bytes_transferred));
 			}
 			else
 			{
