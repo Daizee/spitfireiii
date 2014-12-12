@@ -2688,6 +2688,7 @@ void request_handler::handle_request(request& req, reply& rep)
 					UNLOCK(M_ALLIANCELIST);
 					return;
 				}
+				gserver->mtxlist.ranklist.unlock_shared();
 				Alliance * alliance = 0;
 				gserver->mtxlist.ranklist.lock();
 				if (alliance = gserver->m_alliances->CreateAlliance(alliancename, client->m_accountid))
@@ -3819,6 +3820,7 @@ void request_handler::handle_request(request& req, reply& rep)
 				if (pagesize <= 0 || pagesize > 20 || pageno < 0 || pageno > 100000)
 				{
 					gserver->SendObject(client, gserver->CreateError("rank.getPlayerRank", -99, "Invalid data."));
+					gserver->mtxlist.ranklist.unlock_shared();
 					return;
 				}
 
