@@ -221,6 +221,8 @@ public:
 		shared_mutex lua;
 		shared_mutex timers;
 		shared_mutex market;
+		shared_mutex alliance;
+		shared_mutex ranklist;
 	} mtxlist;
 
 	// Max players allowed connected

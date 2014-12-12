@@ -274,6 +274,7 @@ bool comparehonor(stAlliance first, stAlliance second)
 
 void AllianceCore::SortAlliances()
 {
+	m_main->mtxlist.alliance.lock_shared();
 	m_membersrank.clear();
 	m_prestigerank.clear();
 	m_honorrank.clear();
@@ -313,27 +314,24 @@ void AllianceCore::SortAlliances()
 	m_honorrank.sort(comparehonor);
 
 
-	std::list<stAlliance>::iterator iter;
 	int num = 1;
 	for (stAlliance & alliance : m_membersrank)
 	{
-		alliance.rank = num;
-		alliance.ref->m_membersrank = num++;
+		alliance.rank = alliance.ref->m_membersrank = num++;
 	}
 	num = 1;
 	for (stAlliance & alliance : m_prestigerank)
 	{
-		alliance.rank = num;
-		alliance.ref->m_prestigerank = num++;
-		alliance.ref->m_prestige = iter->prestige;
+		alliance.rank = alliance.ref->m_prestigerank = num++;
+		alliance.ref->m_prestige = alliance->prestige;
 	}
 	num = 1;
 	for (stAlliance & alliance : m_honorrank)
 	{
-		alliance.rank = num;
-		alliance.ref->m_honorrank = num++;
-		alliance.ref->m_honor = iter->honor;
+		alliance.rank = alliance.ref->m_honorrank = num++;
+		alliance.ref->m_honor = alliance->honor;
 	}
+	m_main->mtxlist.alliance.unlock_shared();
 }
 
 Alliance * AllianceCore::AllianceById(uint32_t id)

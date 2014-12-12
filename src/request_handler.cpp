@@ -2676,6 +2676,7 @@ void request_handler::handle_request(request& req, reply& rep)
 				}
 
 				LOCK(M_ALLIANCELIST);
+				gserver->mtxlist.ranklist.lock_shared();
 				if (gserver->m_alliances->AllianceByName(alliancename) != (Alliance*)-1)
 				{
 					string error = "Alliance already existed: ";
@@ -2683,10 +2684,12 @@ void request_handler::handle_request(request& req, reply& rep)
 					error += ".";
 
 					gserver->SendObject(client, gserver->CreateError("alliance.createAlliance", -12, error));
+					gserver->mtxlist.ranklist.unlock_shared();
 					UNLOCK(M_ALLIANCELIST);
 					return;
 				}
 				Alliance * alliance = 0;
+				gserver->mtxlist.ranklist.lock();
 				if (alliance = gserver->m_alliances->CreateAlliance(alliancename, client->m_accountid))
 				{
 					data2["ok"] = 1;
@@ -2706,6 +2709,7 @@ void request_handler::handle_request(request& req, reply& rep)
 						pcity->ResourceUpdate();
 
 						gserver->SendObject(client, gserver->CreateError("alliance.createAlliance", -99, "Alliance created but cannot join. Please contact support."));
+						gserver->mtxlist.ranklist.unlock();
 						UNLOCK(M_ALLIANCELIST);
 						return;
 					}
@@ -2715,6 +2719,7 @@ void request_handler::handle_request(request& req, reply& rep)
 						pcity->ResourceUpdate();
 
 						gserver->SendObject(client, gserver->CreateError("alliance.createAlliance", -99, "Alliance created but cannot set rank to host. Please contact support."));
+						gserver->mtxlist.ranklist.unlock();
 						UNLOCK(M_ALLIANCELIST);
 						return;
 					}
@@ -2727,6 +2732,7 @@ void request_handler::handle_request(request& req, reply& rep)
 					gserver->m_alliances->SortAlliances();
 
 					gserver->SendObject(client, obj2);
+					gserver->mtxlist.ranklist.unlock();
 					UNLOCK(M_ALLIANCELIST);
 					client->SaveToDB();
 					alliance->SaveToDB();
@@ -3787,6 +3793,7 @@ void request_handler::handle_request(request& req, reply& rep)
 				std::list<stClientRank> * ranklist;
 				amf3array beans = amf3array();
 				LOCK(M_RANKEDLIST);
+				gserver->mtxlist.ranklist.lock_shared();
 				switch (sorttype)
 				{
 					case 1:
@@ -3824,6 +3831,7 @@ void request_handler::handle_request(request& req, reply& rep)
 				if ((pageno - 1)*pagesize > ranklist->size())
 				{
 					gserver->SendObject(client, gserver->CreateError("rank.getPlayerRank", -99, "Invalid page."));
+					gserver->mtxlist.ranklist.unlock_shared();
 					UNLOCK(M_RANKEDLIST);
 					return;
 				}
@@ -3868,6 +3876,7 @@ void request_handler::handle_request(request& req, reply& rep)
 					temp["population"] = iter->client->m_population;
 					beans.Add(temp);
 				}
+				gserver->mtxlist.ranklist.unlock_shared();
 				UNLOCK(M_RANKEDLIST);
 
 				data2["beans"] = beans;
@@ -3887,6 +3896,7 @@ void request_handler::handle_request(request& req, reply& rep)
 				std::list<stAlliance> * ranklist;
 				amf3array beans = amf3array();
 				LOCK(M_RANKEDLIST);
+				gserver->mtxlist.ranklist.lock_shared();
 				switch (sorttype)
 				{
 					case 1:
@@ -3906,6 +3916,7 @@ void request_handler::handle_request(request& req, reply& rep)
 				if (pagesize <= 0 || pagesize > 20 || pageno < 0 || pageno > 100000)
 				{
 					gserver->SendObject(client, gserver->CreateError("rank.getAllianceRank", -99, "Invalid data."));
+					gserver->mtxlist.ranklist.unlock_shared();
 					UNLOCK(M_RANKEDLIST);
 					return;
 				}
@@ -3919,6 +3930,7 @@ void request_handler::handle_request(request& req, reply& rep)
 				if ((pageno - 1)*pagesize > ranklist->size())
 				{
 					gserver->SendObject(client, gserver->CreateError("rank.getAllianceRank", -99, "Invalid page."));
+					gserver->mtxlist.ranklist.unlock_shared();
 					UNLOCK(M_RANKEDLIST);
 					return;
 				}
@@ -3948,6 +3960,7 @@ void request_handler::handle_request(request& req, reply& rep)
 					temp["city"] = iter->ref->m_citycount;
 					beans.Add(temp);
 				}
+				gserver->mtxlist.ranklist.unlock_shared();
 				UNLOCK(M_RANKEDLIST);
 
 				data2["beans"] = beans;
