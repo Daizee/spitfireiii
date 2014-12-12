@@ -323,13 +323,13 @@ void AllianceCore::SortAlliances()
 	for (stAlliance & alliance : m_prestigerank)
 	{
 		alliance.rank = alliance.ref->m_prestigerank = num++;
-		alliance.ref->m_prestige = alliance->prestige;
+		alliance.ref->m_prestige = alliance.prestige;
 	}
 	num = 1;
 	for (stAlliance & alliance : m_honorrank)
 	{
 		alliance.rank = alliance.ref->m_honorrank = num++;
-		alliance.ref->m_honor = alliance->honor;
+		alliance.ref->m_honor = alliance.honor;
 	}
 	m_main->mtxlist.alliance.unlock_shared();
 }
