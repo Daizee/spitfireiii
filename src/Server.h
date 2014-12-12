@@ -107,6 +107,8 @@ public:
 
 	uint32_t serverstatus;
 
+	string servername;
+
 	// Initialize Server
 	bool Init();
 
@@ -133,6 +135,9 @@ public:
 	// reasonCode:
 	// 1 = "Server restarting"
 	// 2 = "Server is about to shut down. Logout as soon as possible"
+	// 3 = "Another computer has logged into your account. Make sure you are not trying to log into the game from two computers or browser windows."
+	// 4 = "Server undergoing maintenance."
+	// 5 = custom message
 	void CloseClient(Client * client, int typecode = 1, string message = "Connection Closed");
 
 	City * AddPlayerCity(Client * client, int tileid, uint32_t castleid);
@@ -228,17 +233,17 @@ public:
 	bool TimerThreadRunning;
 	bool SaveThreadRunning;
 
-	string servername;
 	Map * map;
 
-
-	std::list<Client*> players;
 
 	// List of active cities on the server (NPC and Player)
 	std::vector<City*> m_city;
 
 	// Alliance Controller
 	AllianceCore * m_alliances;
+
+
+	std::list<Client*> players;
 
 	uint64_t ltime;
 
@@ -364,6 +369,17 @@ public:
 		data["errorMsg"] = message;
 		data["packageId"] = 0.0f;
 		data["ok"] = id;
+		return obj;
+	}
+
+	amf3object CreateError3(string cmd, int32_t code, string message = "")
+	{
+		amf3object obj;
+		obj["cmd"] = cmd;
+		obj["data"] = amf3object();
+		amf3object & data = obj["data"];
+		data["reasonCode"] = code;
+		data["msg"] = message;
 		return obj;
 	}
 };

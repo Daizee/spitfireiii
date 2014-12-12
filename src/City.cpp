@@ -1663,21 +1663,21 @@ bool PlayerCity::CheckBuildingPrereqs(int16_t type, int16_t level)
 	bool test = true;
 
 
-	for_each(cfg->buildings.begin(), cfg->buildings.end(), [&](stPrereq & req)
+	for (stPrereq & req : cfg->buildings)
 	{
 		if (GetBuildingLevel(req.id) < req.level)
 			test = false;
-	});
-	for_each(cfg->items.begin(), cfg->items.end(), [&](stPrereq & req)
+	}
+	for (stPrereq & req : cfg->items)
 	{
 		if (m_client->GetItemCount(req.id) < req.level)
 			test = false;
-	});
-	for_each(cfg->techs.begin(), cfg->techs.end(), [&](stPrereq & req)
+	}
+	for (stPrereq & req : cfg->techs)
 	{
 		if (m_client->GetResearchLevel(req.id) < req.level)
 			test = false;
-	});
+	}
  	return test;
 }
 

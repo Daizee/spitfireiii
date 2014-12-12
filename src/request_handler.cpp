@@ -29,7 +29,6 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <boost/lexical_cast.hpp>
 #include "reply.h"
 #include "request.h"
 #include "Client.h"
@@ -381,39 +380,39 @@ void request_handler::handle_request(request& req, reply& rep)
 				data2["ok"] = 1;
 				data2["packageId"] = 0.0f;
 				string s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
-						   				<itemdef>\
-														<items>\
-																		<itemEum id=\"player.box.compensation.e\" name=\"Compensation Package\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"1\" desc=\"Includes: 10 amulets, 100 cents.\" itemDesc=\"This package was sent to every member of your server to apologize for extended downtime.\" iconUrl=\"images/items/chongzhidalibao.png\" price=\"0\" playerItem=\"true\"/>\
-																						<itemEum id=\"player.box.present.money.44\" name=\"Pamplona Prize Pack\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"1\" desc=\"Includes: Wooden Bull Opener, Lion Medal, Rose Medal, Cross Medal, Primary Guidelines, Intermediate Guidelines, War Horn, Corselet, Holy Water, Hero Hunting, Truce Agreement, City Teleporter, Amulet.\" itemDesc=\"These packages are delivered as gifts to players for every $30 worth of purchases made during our Run with the Bulls promotion.\" iconUrl=\"images/icon/shop/PamplonaPrizePack.png\" price=\"0\" playerItem=\"true\"/>\
-																										<itemEum id=\"player.box.present.money.45\" name=\"Hollow Wooden Bull\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"1\" desc=\"Includes: Chest A (Freedom Medal, Justice Medal, Nation Medal, Michelangelo's Script, Plowshares, Arch Saw, Quarrying Tools, Blower, War Ensign, Excalibur, The Wealth of Nations, Amulet) or Chest B (Primary Guidelines, Intermediate Guidelines, Hero Hunting, Merchant Fleet, Plowshares, Double Saw, Quarrying Tools, Blower, Michelangelo's Script, Tax Policy, The Wealth of Nations) or Chest C (Excalibur, War Horn, Corselet, Truce Agreement, War Ensign, Adv City Teleporter, Michelangelo's Script)\" itemDesc=\"These chests are sent to you as Run with the Bulls gifts from your friends in the game. They require a Wooden Bull Opener to open. You can obtain a Wooden Bull Opener for every $30 worth of purchases made during the Run with the Bulls promotion. When opened, you will receive the contents of Hollow Wooden Bull A, B or C at random.\" iconUrl=\"images/icon/shop/HollowWoodenBull.png\" price=\"300\" playerItem=\"true\"/>\
-																														<itemEum id=\"player.key.bull\" name=\"Wooden Bull Opener\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"0\" desc=\"You can use this key to open one Hollow Wooden Bull sent to you by your friends. If you don’t have any Hollow Wooden Bull, you should ask your friends to send you some!\" itemDesc=\"You can open any Hollow Wooden Bull your friends gave you with this key once.\" iconUrl=\"images/icon/shop/WoodenBullOpener.png\" price=\"0\"/>\
-																																		<itemEum id=\"player.running.shoes\" name=\"Extra-Fast Running Shoes\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"0\" desc=\"A gift from your friends around Run with the Bulls. Use it to get 24 hours of 50% upkeep in ALL your cities any time from July 9th through July 13th. Extra-Fast Running Shoes is stackable (meaning if you already have this buff, using it again will add an additional 24 hours). Once July 14th comes, this item will expire if you haven't used it yet.\" itemDesc=\"Get a 24 hours 50% upkeep buff during July 9th and July 13th.\" iconUrl=\"images/icon/shop/RunningShoes.png\" price=\"0\" playerItem=\"true\"/>\
-																																						<itemEum id=\"player.box.test.1\" name=\"Test Item\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"0\" desc=\"Includes: test items.\" itemDesc=\"This package exists as a test.\" iconUrl=\"images/items/chongzhidalibao.png\" price=\"10\" playerItem=\"true\"/>\
-																																										<itemEum id=\"alliance.ritual_of_pact.ultimate\" name=\"Ritual of Pact (Ultimate)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"90\" userLimit=\"0\" desc=\"Ritual of Pact (Ultimate): member limit is 1,000; effective for 90 days; leeway period is 7 days.\" itemDesc=\"It allows alliance to increase member limit to 1,000 once applied, which is effective for 90 days, while multiple applications of this item can lengthen the effective period. Once the item effect is due, 7-day leeway is given to the alliance. During this time, new members are denied to be recruited to the alliance. If no further application of the item, the alliance disbands automatically once the 7-day leeway period passes.\" iconUrl=\"images/items/Ritual_of_Pact_Ultimate.png\" price=\"75\"/>\
-																																														<itemEum id=\"player.speak.bronze_publicity_ambassador.permanent\" name=\"Bronze Publicity Ambassador (Permanent)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"3650\" userLimit=\"0\" desc=\"Effect of Bronze Publicity Ambassador (Permanent) can only be replaced by Silver Publicity Ambassador (Permanent) or Gold Publicity Ambassador (Permanent).\" itemDesc=\"Once you apply this item, a special bronze icon will be displayed in front of your name when you speak in the chat box. While this item functions permanently, multiple applications make no difference to the duration of the effective period. Its effect can be replaced by Silver Publicity Ambassador (Permanent) or Gold Publicity Ambassador (Permanent).\" iconUrl=\"images/items/Bronze_Publicity_Ambassador_Permanentb.png\" price=\"75\"/>\
-																																																		<itemEum id=\"player.speak.bronze_publicity_ambassador.permanent.15\" name=\"Bronze Publicity Ambassador (15-day)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"15\" userLimit=\"0\" desc=\"Once you apply this item, a special bronze icon will be displayed in front of your name when you speak in the chat box. It’s effective for 15 days, while multiple applications can lengthen the effective period. Its effect can be replaced by Bronze Publicity Ambassador (Permanent), Silver Publicity Ambassador (15-day), Silver Publicity Ambassador (Permanent), Gold Publicity Ambassador (15-day) or Gold Publicity Ambassador (Permanent).\" itemDesc=\"Once you apply this item, a special bronze icon will be displayed in front of your name when you speak in the chat box. It’s effective for 15 days, while multiple applications can lengthen the effective period. Its effect can be replaced by Bronze Publicity Ambassador (Permanent), Silver Publicity Ambassador (15-day), Silver Publicity Ambassador (Permanent), Gold Publicity Ambassador (15-day) or Gold Publicity Ambassador (Permanent).\" iconUrl=\"images/items/Bronze_Publicity_Ambassador_15b.png\" price=\"75\"/>\
-																																																						<itemEum id=\"player.speak.gold_publicity_ambassador.15\" name=\"Gold Publicity Ambassador (15-day)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"15\" userLimit=\"0\" desc=\"Once you apply this item, a special gold icon will be displayed in front of your name when you speak in the chat box. It’s effective for 15 days, while multiple applications can lengthen the effective period. Its effect can be replaced by Gold Publicity Ambassador (Permanent).\" itemDesc=\"Effect of Gold Publicity Ambassador (15-day) can only be replaced by Gold Publicity Ambassador (Permanent).\" iconUrl=\"images/items/gold_publicity_ambassador_15b.png\" price=\"75\"/>\
-																																																										<itemEum id=\"player.speak.gold_publicity_ambassador.permanent\" name=\"Gold Publicity Ambassador (Permanent)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"3650\" userLimit=\"0\" desc=\"Once you apply this item, a special gold icon will be displayed in front of your name when you speak in the chat box. While this item functions permanently, multiple applications make no difference to the duration of the effective period. \" itemDesc=\"You're the highest level Publicity Ambassador now.\" iconUrl=\"images/items/Gold_Publicity_Ambassador_Permanentb.png\" price=\"75\"/>\
-																																																														<itemEum id=\"player.speak.silver_publicity_ambassador.15\" name=\"Silver Publicity Ambassador (15-day)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"15\" userLimit=\"0\" desc=\"Effect of Silver Publicity Ambassador (15-day) can only be replaced by Silver Publicity Ambassador (Permanent), Gold Publicity Ambassador (15-day) or Gold Publicity Ambassador (Permanent).\" itemDesc=\"Once you apply this item, a special silver icon will be displayed in front of your name when you speak in the chat box. It’s effective for 15 days, while multiple applications can lengthen the effective period. Its effect can be replaced by Silver Publicity Ambassador (Permanent), Gold Publicity Ambassador (15-day) or Gold Publicity Ambassador (Permanent).\" iconUrl=\"images/items/Silver_Publicity_Ambassador_15b.png\" price=\"75\"/>\
-																																																																		<itemEum id=\"player.speak.silver_publicity_ambassador.permanent\" name=\"Silver Publicity Ambassador (Permanent)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"3650\" userLimit=\"0\" desc=\"Once you apply this item, a special silver icon will be displayed in front of your name when you speak in the chat box. While this item functions permanently, multiple applications make no difference to the duration of the effective period. Its effect can be replaced by Silver Publicity Ambassador (Permanent) or Gold Publicity Ambassador (Permanent).\" itemDesc=\"Effect of Silver Publicity Ambassador (Permanent) can only be replaced by Gold Publicity Ambassador (Permanent).\" iconUrl=\"images/items/silver_publicity_ambassador_permanentb.png\" price=\"75\"/>\
-																																																																						<itemEum id=\"alliance.ritual_of_pact.advanced\" name=\"Ritual of Pact (Advanced)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"15\" userLimit=\"0\" desc=\"Ritual of Pact(Advanced):member limit is 1,000;effective for 15 days; leeway perod is 7 days.\" itemDesc=\"It allows alliance to increase member limit to 1,000 once applied, which is effective for 15 days, while multiple applications of this item can lengthen the effective period. Once the item effect is due, 7-day leeway is given to the alliance. During this time, new members are denied to be recruited to the alliance. If no further application of the item, the alliance disbands automatically once the 7-day leeway period passes.\" iconUrl=\"images/items/Ritual_of_Pact_Advanced.png\" price=\"75\"/>\
-																																																																										<itemEum id=\"alliance.ritual_of_pact.premium\" name=\"Ritual of Pact (Premium)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"30\" userLimit=\"0\" desc=\"Ritual of Pact (Premium): member limit is 1,000; effective for 30 days; leeway period is 7 days.\" itemDesc=\"It allows alliance to increase member limit to 1,000 once applied, which is effective for 30 days, while multiple applications of this item can lengthen the effective period. Once the item effect is due, 7-day leeway is given to the alliance. During this time, new members are denied to be recruited to the alliance. If no further application of the item, the alliance disbands automatically once the 7-day leeway period passes.\" iconUrl=\"images/items/Ritual_of_Pact_Premium.png\" price=\"75\"/>\
-																																																																														<itemEum id=\"consume.1.c\" name=\"Speaker (100 pieces package)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"0\" userLimit=\"0\" desc=\"Used while speaking in World channel and sending group message.\" itemDesc=\"It includes 100 Speakers. It costs one Speaker per sentence when chatting in World channel, while sending a group message costs two. Unpack automatically when purchased.\" iconUrl=\"images/items/biglaba.png\" price=\"200\" playerItem=\"true\"/>\
-																																																																																		</items>\
-																																																																																						<special>\
-																																																																																										<pack id=\"Special Christmas Chest\"/>\
-																																																																																														<pack id=\"Special New Year Chest\"/>\
-																																																																																																		<pack id=\"Special Easter Chest\"/>\
-																																																																																																						<pack id=\"Special Evony Happiness Chest\"/>\
-																																																																																																										<pack id=\"Halloween Chest O'Treats\"/>\
-																																																																																																														<pack id=\"Special Thanksgiving Package\"/>\
-																																																																																																																		<pack id=\"Secret Santa Chest\"/>\
-																																																																																																																						<pack id=\"Valentine's Day Chest \"/>\
-																																																																																																																										<pack id=\"St Patrick's Day Chest\"/>\
-																																																																																																																														<pack id=\"Special Easter Chest\"/>\
-																																																																																																																																		<pack id=\"Hollow Wooden Bull\"/>\
-																																																																																																																																						</special>\
-																																																																																																																																										</itemdef>";
+<itemdef>\
+<items>\
+<itemEum id=\"player.box.compensation.e\" name=\"Compensation Package\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"1\" desc=\"Includes: 10 amulets, 100 cents.\" itemDesc=\"This package was sent to every member of your server to apologize for extended downtime.\" iconUrl=\"images/items/chongzhidalibao.png\" price=\"0\" playerItem=\"true\"/>\
+<itemEum id=\"player.box.present.money.44\" name=\"Pamplona Prize Pack\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"1\" desc=\"Includes: Wooden Bull Opener, Lion Medal, Rose Medal, Cross Medal, Primary Guidelines, Intermediate Guidelines, War Horn, Corselet, Holy Water, Hero Hunting, Truce Agreement, City Teleporter, Amulet.\" itemDesc=\"These packages are delivered as gifts to players for every $30 worth of purchases made during our Run with the Bulls promotion.\" iconUrl=\"images/icon/shop/PamplonaPrizePack.png\" price=\"0\" playerItem=\"true\"/>\
+<itemEum id=\"player.box.present.money.45\" name=\"Hollow Wooden Bull\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"1\" desc=\"Includes: Chest A (Freedom Medal, Justice Medal, Nation Medal, Michelangelo's Script, Plowshares, Arch Saw, Quarrying Tools, Blower, War Ensign, Excalibur, The Wealth of Nations, Amulet) or Chest B (Primary Guidelines, Intermediate Guidelines, Hero Hunting, Merchant Fleet, Plowshares, Double Saw, Quarrying Tools, Blower, Michelangelo's Script, Tax Policy, The Wealth of Nations) or Chest C (Excalibur, War Horn, Corselet, Truce Agreement, War Ensign, Adv City Teleporter, Michelangelo's Script)\" itemDesc=\"These chests are sent to you as Run with the Bulls gifts from your friends in the game. They require a Wooden Bull Opener to open. You can obtain a Wooden Bull Opener for every $30 worth of purchases made during the Run with the Bulls promotion. When opened, you will receive the contents of Hollow Wooden Bull A, B or C at random.\" iconUrl=\"images/icon/shop/HollowWoodenBull.png\" price=\"300\" playerItem=\"true\"/>\
+<itemEum id=\"player.key.bull\" name=\"Wooden Bull Opener\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"0\" desc=\"You can use this key to open one Hollow Wooden Bull sent to you by your friends. If you don’t have any Hollow Wooden Bull, you should ask your friends to send you some!\" itemDesc=\"You can open any Hollow Wooden Bull your friends gave you with this key once.\" iconUrl=\"images/icon/shop/WoodenBullOpener.png\" price=\"0\"/>\
+<itemEum id=\"player.running.shoes\" name=\"Extra-Fast Running Shoes\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"0\" desc=\"A gift from your friends around Run with the Bulls. Use it to get 24 hours of 50% upkeep in ALL your cities any time from July 9th through July 13th. Extra-Fast Running Shoes is stackable (meaning if you already have this buff, using it again will add an additional 24 hours). Once July 14th comes, this item will expire if you haven't used it yet.\" itemDesc=\"Get a 24 hours 50% upkeep buff during July 9th and July 13th.\" iconUrl=\"images/icon/shop/RunningShoes.png\" price=\"0\" playerItem=\"true\"/>\
+<itemEum id=\"player.box.test.1\" name=\"Test Item\" itemType=\"\xE5\xAE\x9D\xE7\xAE\xB1\" dayLimit=\"0\" userLimit=\"0\" desc=\"Includes: test items.\" itemDesc=\"This package exists as a test.\" iconUrl=\"images/items/chongzhidalibao.png\" price=\"10\" playerItem=\"true\"/>\
+<itemEum id=\"alliance.ritual_of_pact.ultimate\" name=\"Ritual of Pact (Ultimate)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"90\" userLimit=\"0\" desc=\"Ritual of Pact (Ultimate): member limit is 1,000; effective for 90 days; leeway period is 7 days.\" itemDesc=\"It allows alliance to increase member limit to 1,000 once applied, which is effective for 90 days, while multiple applications of this item can lengthen the effective period. Once the item effect is due, 7-day leeway is given to the alliance. During this time, new members are denied to be recruited to the alliance. If no further application of the item, the alliance disbands automatically once the 7-day leeway period passes.\" iconUrl=\"images/items/Ritual_of_Pact_Ultimate.png\" price=\"75\"/>\
+<itemEum id=\"player.speak.bronze_publicity_ambassador.permanent\" name=\"Bronze Publicity Ambassador (Permanent)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"3650\" userLimit=\"0\" desc=\"Effect of Bronze Publicity Ambassador (Permanent) can only be replaced by Silver Publicity Ambassador (Permanent) or Gold Publicity Ambassador (Permanent).\" itemDesc=\"Once you apply this item, a special bronze icon will be displayed in front of your name when you speak in the chat box. While this item functions permanently, multiple applications make no difference to the duration of the effective period. Its effect can be replaced by Silver Publicity Ambassador (Permanent) or Gold Publicity Ambassador (Permanent).\" iconUrl=\"images/items/Bronze_Publicity_Ambassador_Permanentb.png\" price=\"75\"/>\
+<itemEum id=\"player.speak.bronze_publicity_ambassador.permanent.15\" name=\"Bronze Publicity Ambassador (15-day)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"15\" userLimit=\"0\" desc=\"Once you apply this item, a special bronze icon will be displayed in front of your name when you speak in the chat box. It’s effective for 15 days, while multiple applications can lengthen the effective period. Its effect can be replaced by Bronze Publicity Ambassador (Permanent), Silver Publicity Ambassador (15-day), Silver Publicity Ambassador (Permanent), Gold Publicity Ambassador (15-day) or Gold Publicity Ambassador (Permanent).\" itemDesc=\"Once you apply this item, a special bronze icon will be displayed in front of your name when you speak in the chat box. It’s effective for 15 days, while multiple applications can lengthen the effective period. Its effect can be replaced by Bronze Publicity Ambassador (Permanent), Silver Publicity Ambassador (15-day), Silver Publicity Ambassador (Permanent), Gold Publicity Ambassador (15-day) or Gold Publicity Ambassador (Permanent).\" iconUrl=\"images/items/Bronze_Publicity_Ambassador_15b.png\" price=\"75\"/>\
+<itemEum id=\"player.speak.gold_publicity_ambassador.15\" name=\"Gold Publicity Ambassador (15-day)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"15\" userLimit=\"0\" desc=\"Once you apply this item, a special gold icon will be displayed in front of your name when you speak in the chat box. It’s effective for 15 days, while multiple applications can lengthen the effective period. Its effect can be replaced by Gold Publicity Ambassador (Permanent).\" itemDesc=\"Effect of Gold Publicity Ambassador (15-day) can only be replaced by Gold Publicity Ambassador (Permanent).\" iconUrl=\"images/items/gold_publicity_ambassador_15b.png\" price=\"75\"/>\
+<itemEum id=\"player.speak.gold_publicity_ambassador.permanent\" name=\"Gold Publicity Ambassador (Permanent)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"3650\" userLimit=\"0\" desc=\"Once you apply this item, a special gold icon will be displayed in front of your name when you speak in the chat box. While this item functions permanently, multiple applications make no difference to the duration of the effective period. \" itemDesc=\"You're the highest level Publicity Ambassador now.\" iconUrl=\"images/items/Gold_Publicity_Ambassador_Permanentb.png\" price=\"75\"/>\
+<itemEum id=\"player.speak.silver_publicity_ambassador.15\" name=\"Silver Publicity Ambassador (15-day)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"15\" userLimit=\"0\" desc=\"Effect of Silver Publicity Ambassador (15-day) can only be replaced by Silver Publicity Ambassador (Permanent), Gold Publicity Ambassador (15-day) or Gold Publicity Ambassador (Permanent).\" itemDesc=\"Once you apply this item, a special silver icon will be displayed in front of your name when you speak in the chat box. It’s effective for 15 days, while multiple applications can lengthen the effective period. Its effect can be replaced by Silver Publicity Ambassador (Permanent), Gold Publicity Ambassador (15-day) or Gold Publicity Ambassador (Permanent).\" iconUrl=\"images/items/Silver_Publicity_Ambassador_15b.png\" price=\"75\"/>\
+<itemEum id=\"player.speak.silver_publicity_ambassador.permanent\" name=\"Silver Publicity Ambassador (Permanent)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"3650\" userLimit=\"0\" desc=\"Once you apply this item, a special silver icon will be displayed in front of your name when you speak in the chat box. While this item functions permanently, multiple applications make no difference to the duration of the effective period. Its effect can be replaced by Silver Publicity Ambassador (Permanent) or Gold Publicity Ambassador (Permanent).\" itemDesc=\"Effect of Silver Publicity Ambassador (Permanent) can only be replaced by Gold Publicity Ambassador (Permanent).\" iconUrl=\"images/items/silver_publicity_ambassador_permanentb.png\" price=\"75\"/>\
+<itemEum id=\"alliance.ritual_of_pact.advanced\" name=\"Ritual of Pact (Advanced)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"15\" userLimit=\"0\" desc=\"Ritual of Pact(Advanced):member limit is 1,000;effective for 15 days; leeway perod is 7 days.\" itemDesc=\"It allows alliance to increase member limit to 1,000 once applied, which is effective for 15 days, while multiple applications of this item can lengthen the effective period. Once the item effect is due, 7-day leeway is given to the alliance. During this time, new members are denied to be recruited to the alliance. If no further application of the item, the alliance disbands automatically once the 7-day leeway period passes.\" iconUrl=\"images/items/Ritual_of_Pact_Advanced.png\" price=\"75\"/>\
+<itemEum id=\"alliance.ritual_of_pact.premium\" name=\"Ritual of Pact (Premium)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"30\" userLimit=\"0\" desc=\"Ritual of Pact (Premium): member limit is 1,000; effective for 30 days; leeway period is 7 days.\" itemDesc=\"It allows alliance to increase member limit to 1,000 once applied, which is effective for 30 days, while multiple applications of this item can lengthen the effective period. Once the item effect is due, 7-day leeway is given to the alliance. During this time, new members are denied to be recruited to the alliance. If no further application of the item, the alliance disbands automatically once the 7-day leeway period passes.\" iconUrl=\"images/items/Ritual_of_Pact_Premium.png\" price=\"75\"/>\
+<itemEum id=\"consume.1.c\" name=\"Speaker (100 pieces package)\" itemType=\"\xE5\xAE\x9D\xE7\x89\xA9\" dayLimit=\"0\" userLimit=\"0\" desc=\"Used while speaking in World channel and sending group message.\" itemDesc=\"It includes 100 Speakers. It costs one Speaker per sentence when chatting in World channel, while sending a group message costs two. Unpack automatically when purchased.\" iconUrl=\"images/items/biglaba.png\" price=\"200\" playerItem=\"true\"/>\
+</items>\
+<special>\
+<pack id=\"Special Christmas Chest\"/>\
+<pack id=\"Special New Year Chest\"/>\
+<pack id=\"Special Easter Chest\"/>\
+<pack id=\"Special Evony Happiness Chest\"/>\
+<pack id=\"Halloween Chest O'Treats\"/>\
+<pack id=\"Special Thanksgiving Package\"/>\
+<pack id=\"Secret Santa Chest\"/>\
+<pack id=\"Valentine's Day Chest \"/>\
+<pack id=\"St Patrick's Day Chest\"/>\
+<pack id=\"Special Easter Chest\"/>\
+<pack id=\"Hollow Wooden Bull\"/>\
+</special>\
+</itemdef>";
 				data2["itemXml"] = s;
 
 
@@ -542,7 +541,7 @@ void request_handler::handle_request(request& req, reply& rep)
 					temp += temp2;
 
 					// 					if (!gserver->sql2->Query("INSERT INTO `cities` (`accountid`,`misc`,`fieldid`,`name`,`buildings`,`gold`,`food`,`wood`,`iron`,`stone`,`creation`,`transingtrades`,`troop`,`fortification`,`trades`) \
-					// 								 VALUES ("XI64", '%s',%d, '%s', '%s',100000,100000,100000,100000,100000,"DBL",'','','','');",
+										// 								 VALUES ("XI64", '%s',%d, '%s', '%s',100000,100000,100000,100000,100000,"DBL",'','','','');",
 					// 								 client->m_accountid, (char*)temp.c_str(), randomid, castleName, "31,1,-1,0,0.000000,0.000000", (double)unixtime()))
 					Session ses(gserver->serverpool->get());
 					uint64_t nixtime = unixtime();
@@ -737,18 +736,18 @@ void request_handler::handle_request(request& req, reply& rep)
 				report["armyType"] = 5;//5 = attack?
 				report["isRead"] = 0;//0 = unread, 1 = read?
 				report["content"] = "<reportData reportUrl=\"http://battleceshi3.evony.com/default.html?20140613/46/f1/46f16df3fb6ca832bc7ac1a182c99060.xml\">\
-									  <battleReport isAttack=\"true\" isAttackSuccess=\"false\" round=\"100\">\
-									      <attackTroop king=\"Daisy\" heroName=\"shitatt\" heroLevel=\"1\" heroUrl=\"images/icon/player/faceA21s.png\">\
-										        <troopUnit typeId=\"2\" count=\"1\" lose=\"0\"/>\
-												    </attackTroop>\
-													    <defendTroop king=\"Daisy1\"/>\
-														    <backTroop>\
-															      <troops heroLevel=\"1\" heroName=\"shitatt\" heroUrl=\"images/icon/player/faceA21s.png\" isHeroBeSeized=\"false\">\
-																          <troopInfo typeId=\"2\" remain=\"1\"/>\
-																		        </troops>\
-																				    </backTroop>\
-																					  </battleReport>\
-																					  </reportData>";
+<battleReport isAttack=\"true\" isAttackSuccess=\"false\" round=\"100\">\
+<attackTroop king=\"Daisy\" heroName=\"shitatt\" heroLevel=\"1\" heroUrl=\"images/icon/player/faceA21s.png\">\
+<troopUnit typeId=\"2\" count=\"1\" lose=\"0\"/>\
+</attackTroop>\
+<defendTroop king=\"Daisy1\"/>\
+<backTroop>\
+<troops heroLevel=\"1\" heroName=\"shitatt\" heroUrl=\"images/icon/player/faceA21s.png\" isHeroBeSeized=\"false\">\
+<troopInfo typeId=\"2\" remain=\"1\"/>\
+</troops>\
+</backTroop>\
+</battleReport>\
+</reportData>";
 				data3["report"] = report;
 
 				gserver->SendObject(client, obj3);
@@ -3056,17 +3055,6 @@ void request_handler::handle_request(request& req, reply& rep)
 						amf3array items = amf3array();
 						amf3array techs = amf3array();
 
-						std::vector<stPrereq>::const_iterator iterbegin = gserver->m_researchconfig[i][0].buildings.begin();
-						std::vector<stPrereq>::const_iterator iterend = gserver->m_researchconfig[i][0].buildings.end();
-						while (iterbegin != gserver->m_researchconfig[i][0].buildings.end())
-						{
-							std::cerr << (int64_t)&iterbegin << "\n";
-							iterbegin++;
-						}
-						for_each(gserver->m_researchconfig[i][0].buildings.begin(), gserver->m_researchconfig[i][0].buildings.end(), [&](stPrereq & req)
-						{
-							std::cerr << (int64_t)&req << "\n";
-						});
 						for (stPrereq & req : gserver->m_researchconfig[i][0].buildings)
 						{
 							if (req.id > 0)
@@ -3235,7 +3223,7 @@ void request_handler::handle_request(request& req, reply& rep)
 					amf3array techs = amf3array();
 
 
-					for_each(researchconfig->buildings.begin(), researchconfig->buildings.end(), [&](stPrereq & req)
+					for (stPrereq & req : researchconfig->buildings)
 					{
 						if (req.id > 0)
 						{
@@ -3247,8 +3235,8 @@ void request_handler::handle_request(request& req, reply& rep)
 							ta["typeId"] = req.id;
 							buildings.Add(ta);
 						}
-					});
-					for_each(researchconfig->items.begin(), researchconfig->items.end(), [&](stPrereq & req)
+					}
+					for (stPrereq & req : researchconfig->items)
 					{
 						if (req.id > 0)
 						{
@@ -3260,8 +3248,8 @@ void request_handler::handle_request(request& req, reply& rep)
 							ta["id"] = gserver->m_items[req.id].name;
 							items.Add(ta);
 						}
-					});
-					for_each(researchconfig->techs.begin(), researchconfig->techs.end(), [&](stPrereq & req)
+					}
+					for (stPrereq & req : researchconfig->techs)
 					{
 						if (req.id > 0)
 						{
@@ -3273,7 +3261,7 @@ void request_handler::handle_request(request& req, reply& rep)
 							ta["typeId"] = req.id;
 							buildings.Add(ta);
 						}
-					});
+					}
 
 					conditionbean["buildings"] = buildings;
 					conditionbean["items"] = items;
@@ -3526,6 +3514,261 @@ void request_handler::handle_request(request& req, reply& rep)
 				gserver->SendObject(client, obj2);
 				return;
 			}
+		}
+#pragma endregion
+#pragma region login
+		if (cmdtype == "login")
+		{
+			//errors:
+			//-5 = captcha
+			//-99 = general error
+			//-100 = holiday
+			string username = data["user"];
+			string password = data["pwd"];
+
+			if (gserver->maxplayers <= gserver->currentplayersonline + 1)
+			{
+				gserver->SendObject(&c, gserver->CreateError("server.LoginResponse", -99, "Servers are currently overloaded. Please try again later."));
+				return;
+			}
+
+			string newuser;
+			string newpass;
+			newuser = makesafe(username);
+			newpass = makesafe(password);
+
+
+			{
+				Session ses(gserver->accountpool->get());
+				Statement select(ses);
+				select << "SELECT COUNT(*) AS a FROM `account` WHERE `email`=?;", use(newuser);
+				select.execute();
+				RecordSet rs(select);
+
+				if (rs.value("a").convert<int32_t>() == 0)
+				{
+					//account does not exist - insert new row
+					try
+					{
+						Statement insert(ses);
+						insert << "INSERT INTO `account` (`name`, `email`, `ip`, `lastlogin`, `creation`, `password`, `status`, `reason`) VALUES ('null', ?, '', ?, ?, ?, 0, '');", use(newuser), use(unixtime()), use(unixtime()), use(newpass), now;
+					}
+					catch (Poco::Data::MySQL::StatementException * e)
+					{
+						gserver->consoleLogger->error(Poco::format("Account Create Exception: %s", e->displayText()));
+						return;
+					}
+				}
+			}
+
+		{
+			Session ses(gserver->accountpool->get());
+			Statement select(ses);
+			select << "SELECT * FROM `account` WHERE `email`=? AND `password`=?;", use(newuser), use(newpass);
+			select.execute();
+			RecordSet rs(select);
+
+			if (rs.rowCount() == 0)
+			{
+				//account doesn't exist or password is wrong
+				gserver->SendObject(&c, gserver->CreateError("server.LoginResponse", -2, "Incorrect account or password."));
+				return;
+			}
+			else
+			{
+				int32_t masteraccountid = rs.value("id").convert<int32_t>();
+				client = gserver->GetClientByParent(masteraccountid);
+
+				bool banned = false;
+
+				{
+					//are they banned? if so, globally or for this server?
+					Session ses2(gserver->serverpool->get());
+					Statement select2(ses2);
+					select2 << "SELECT * FROM `accounts` WHERE `parentid`=?;", use(masteraccountid);
+					select2.execute();
+					RecordSet rs2(select2);
+
+					if (rs.value("status").convert<int32_t>() == -99)
+						banned = true;
+
+					if (rs2.rowCount() > 0 && rs2.value("status").convert<int32_t>() == -99)
+						banned = true;
+
+					if (banned)
+					{
+						string errormsg = "You are banned. Reason: ";
+						errormsg += rs.value("reason").convert<string>().length()>0 ? rs.value("reason").convert<string>() : rs2.value("reason").convert<string>();
+
+						gserver->SendObject(&c, gserver->CreateError("server.LoginResponse", -99, errormsg));
+
+						return;
+					}
+				}
+
+				//client = gserver->GetClientByParent(parentid);
+				if (client == 0)
+				{
+					client = gserver->NewClient();
+					client->masteraccountid = masteraccountid;
+					client->m_socknum = req.conn->uid;
+					client->socket = req.conn;
+					req.conn->client_ = client;
+					client->m_connected = true;
+				}
+				else
+				{
+					if (client->m_connected)
+					{
+						//player already logged on
+						gserver->CloseClient(client, 3, "");//multiple people logging into the same account
+					}
+					//Login is valid
+					client->m_connected = true;
+					double logintime = unixtime();
+					if (logintime - client->m_lastlogin < 1000 * 5)
+					{
+						gserver->SendObject(req.conn, gserver->CreateError("server.LoginResponse", 6, "You have tried logging in too frequently. Please try again later."));
+						req.conn->stop();
+						return;
+					}
+					client->m_lastlogin = logintime;
+					if (client->socket) gserver->CloseClient(client, 3, "");
+					client->socket = req.conn;
+					client->m_socknum = req.conn->uid;
+					client->m_ipaddress = req.conn->address;
+					req.conn->client_ = client;
+					gserver->consoleLogger->information(Poco::format("Already established client found # %?d", (uint32_t)client->m_clientnumber));
+
+					if (client->m_email == "Daisy")
+					{
+						client->m_bdenyotherplayer = true;
+						client->m_icon = 7;
+					}
+				}
+
+				if (client == 0)
+				{
+					//error creating client object
+					gserver->consoleLogger->information(Poco::format("Error creating client object @ %s:%?d", (string)__FILE__, __LINE__));
+					gserver->SendObject(client, gserver->CreateError("server.LoginResponse", -99, "Error with connecting. Please contact support."));
+					return;
+				}
+
+
+				//account exists
+				Session ses2(gserver->serverpool->get());
+				Statement select2(ses2);
+				select2 << "SELECT * FROM `accounts` WHERE `parentid`=?;", use(masteraccountid);
+				select2.execute();
+				RecordSet rs2(select2);
+
+				if (rs2.rowCount() == 0)
+				{
+					//does not have an account on server
+					gserver->SendObject(client, gserver->CreateError("server.LoginResponse", -4, "need create player"));
+					client->m_loggedin = true;
+
+					return;
+				}
+				else
+				{
+					int accountid = rs2.value("accountid").convert<int32_t>();
+					client->m_accountid = accountid;
+
+					//has an account, what about cities?
+					Session ses3(gserver->serverpool->get());
+					Statement select3(ses3);
+					select3 << "SELECT * FROM `cities` WHERE `accountid`=?;", use(accountid);
+					select3.execute();
+					RecordSet rs3(select3);
+
+					if (rs3.rowCount() == 0)
+					{
+						//does not have any cities on server but did have an account - this only happens if you try to "restart" your account. it saves the account info while deleting your cities
+						gserver->SendObject(client, gserver->CreateError("server.LoginResponse", -4, "need create player"));
+						client->m_loggedin = true;
+						return;
+					}
+					else
+					{
+						//has an account and cities. process the list and send account info
+
+						amf3object obj;
+						obj["cmd"] = "server.LoginResponse";
+						obj["data"] = amf3object();
+						amf3object & data = obj["data"];
+						data["packageId"] = 0.0f;
+
+						double tslag = unixtime();
+
+						if (client->GetItemCount("consume.1.a") < 10000)
+							client->SetItem("consume.1.a", 10000);
+						client->m_cents = 5000;
+
+						data["player"] = client->ToObject();
+						//UNLOCK(M_CLIENTLIST);
+
+						if (client->m_city.size() == 0)
+						{
+							//problem
+							gserver->consoleLogger->error(Poco::format("Error client has no cities @ %s:%?d", (string)__FILE__, __LINE__));
+							gserver->SendObject(client, gserver->CreateError("server.LoginResponse", -99, "Error with connecting. Please contact support."));
+							return;
+						}
+						client->m_currentcityid = ((PlayerCity*)client->m_city.at(0))->m_castleid;
+						client->m_currentcityindex = 0;
+						client->m_accountexists = true;
+
+
+						//check for holiday status
+						stBuff * holiday = client->GetBuff("FurloughBuff");
+						if (holiday && holiday->endtime > tslag)
+						{
+							//is in holiday - send holiday info too
+
+							string s;
+							{
+								int32_t hours;
+								int32_t mins;
+								int32_t secs = (holiday->endtime - tslag) / 1000;
+
+								hours = secs / 60 / 60;
+								mins = secs / 60 - hours * 60;
+								secs = secs - mins * 60 - hours * 60 * 60;
+
+								std::stringstream ss;
+								ss << hours << "," << mins << "," << secs;
+
+								s = ss.str();
+							}
+
+							data["ok"] = -100;
+							data["msg"] = s;
+							data["errorMsg"] = s;
+						}
+						else
+						{
+							data["ok"] = 1;
+							data["msg"] = "success";
+						}
+
+						gserver->SendObject(client, obj);
+						//SendObject(*req.connection, obj);
+
+						client->m_lag = unixtime() - tslag;
+
+						client->m_loggedin = true;
+
+						gserver->currentplayersonline++;
+						client->SaveToDB();
+
+						return;
+					}
+				}
+			}
+		}
+			return;
 		}
 #pragma endregion
 #pragma region rank
@@ -5953,265 +6196,6 @@ void request_handler::handle_request(request& req, reply& rep)
 			}
 		}
 
-#pragma endregion
-#pragma region login
-		if (cmdtype == "login")
-		{
-			//errors:
-			//-5 = captcha
-			//-99 = general error
-			//-100 = holiday
-			string username = data["user"];
-			string password = data["pwd"];
-
-			if (gserver->maxplayers <= gserver->currentplayersonline + 1)
-			{
-				gserver->SendObject(&c, gserver->CreateError("server.LoginResponse", -99, "Servers are currently overloaded. Please try again later."));
-				return;
-			}
-
-			string newuser;
-			string newpass;
-			newuser = makesafe(username);
-			newpass = makesafe(password);
-
-
-			{
-				Session ses(gserver->accountpool->get());
-				Statement select(ses);
-				select << "SELECT COUNT(*) AS a FROM `account` WHERE `email`=?;", use(newuser);
-				select.execute();
-				RecordSet rs(select);
-
-				if (rs.value("a").convert<int32_t>() == 0)
-				{
-					//account does not exist - insert new row
-					try
-					{
-						Statement insert(ses);
-						insert << "INSERT INTO `account` (`name`, `email`, `ip`, `lastlogin`, `creation`, `password`, `status`, `reason`) VALUES ('null', ?, '', ?, ?, ?, 0, '');", use(newuser), use(unixtime()), use(unixtime()), use(newpass), now;
-					}
-					catch (Poco::Data::MySQL::StatementException * e)
-					{
-						gserver->consoleLogger->error(Poco::format("Account Create Exception: %s", e->displayText()));
-						return;
-					}
-				}
-			}
-
-		{
-			Session ses(gserver->accountpool->get());
-			Statement select(ses);
-			select << "SELECT * FROM `account` WHERE `email`=? AND `password`=?;", use(newuser), use(newpass);
-			select.execute();
-			RecordSet rs(select);
-
-			if (rs.rowCount() == 0)
-			{
-				//account doesn't exist or password is wrong
-				gserver->SendObject(&c, gserver->CreateError("server.LoginResponse", -2, "Incorrect account or password."));
-				return;
-			}
-			else
-			{
-				int32_t masteraccountid = rs.value("id").convert<int32_t>();
-				client = gserver->GetClientByParent(masteraccountid);
-
-				bool banned = false;
-
-				{
-					//are they banned? if so, globally or for this server?
-					Session ses2(gserver->serverpool->get());
-					Statement select2(ses2);
-					select2 << "SELECT * FROM `accounts` WHERE `parentid`=?;", use(masteraccountid);
-					select2.execute();
-					RecordSet rs2(select2);
-
-					if (rs.value("status").convert<int32_t>() == -99)
-						banned = true;
-
-					if (rs2.rowCount() > 0 && rs2.value("status").convert<int32_t>() == -99)
-						banned = true;
-
-					if (banned)
-					{
-						string errormsg = "You are banned. Reason: ";
-						errormsg += rs.value("reason").convert<string>().length()>0 ? rs.value("reason").convert<string>() : rs2.value("reason").convert<string>();
-
-						gserver->SendObject(&c, gserver->CreateError("server.LoginResponse", -99, errormsg));
-
-						return;
-					}
-				}
-
-				//client = gserver->GetClientByParent(parentid);
-				if (client == 0)
-				{
-					client = gserver->NewClient();
-					client->masteraccountid = masteraccountid;
-					client->m_socknum = req.conn->uid;
-					client->socket = req.conn;
-					req.conn->client_ = client;
-					client->m_connected = true;
-				}
-				else
-				{
-					//Login is valid
-					client->m_connected = true;
-					double logintime = unixtime();
-					if (logintime - client->m_lastlogin < 1000 * 5)
-					{
-						amf3object obj2;
-						obj2["cmd"] = "server.ConnectionLost";
-						obj2["data"] = amf3object();
-						amf3object & data2 = obj2["data"];
-						data2["reasonCode"] = 6;
-						data2["msg"] = "You have tried logging in too frequently. Please try again later.";
-
-						//rep.objects.push_back(obj2);
-						gserver->SendObject(client, obj2);
-						req.conn->stop();
-						//gserver->CloseClient(client, 6, "You have tried logging in too frequently. Please try again later.");
-						return;
-					}
-					client->m_lastlogin = logintime;
-					if (client->socket) gserver->CloseClient(client, 2, "");
-					client->socket = req.conn;
-					client->m_socknum = req.conn->uid;
-					client->m_ipaddress = req.conn->address;
-					req.conn->client_ = client;
-					gserver->consoleLogger->information(Poco::format("Already established client found # %?d", (uint32_t)client->m_clientnumber));
-
-					if (client->m_email == "Daisy")
-					{
-						client->m_bdenyotherplayer = true;
-						client->m_icon = 7;
-					}
-				}
-
-				if (client == 0)
-				{
-					//error creating client object
-					gserver->consoleLogger->information(Poco::format("Error creating client object @ %s:%?d", (string)__FILE__, __LINE__));
-					gserver->SendObject(client, gserver->CreateError("server.LoginResponse", -99, "Error with connecting. Please contact support."));
-					return;
-				}
-
-
-				//account exists
-				Session ses2(gserver->serverpool->get());
-				Statement select2(ses2);
-				select2 << "SELECT * FROM `accounts` WHERE `parentid`=?;", use(masteraccountid);
-				select2.execute();
-				RecordSet rs2(select2);
-
-				if (rs2.rowCount() == 0)
-				{
-					//does not have an account on server
-					gserver->SendObject(client, gserver->CreateError("server.LoginResponse", -4, "need create player"));
-					client->m_loggedin = true;
-
-					return;
-				}
-				else
-				{
-					int accountid = rs2.value("accountid").convert<int32_t>();
-					client->m_accountid = accountid;
-
-					//has an account, what about cities?
-					Session ses3(gserver->serverpool->get());
-					Statement select3(ses3);
-					select3 << "SELECT * FROM `cities` WHERE `accountid`=?;", use(accountid);
-					select3.execute();
-					RecordSet rs3(select3);
-
-					if (rs3.rowCount() == 0)
-					{
-						//does not have any cities on server but did have an account - this only happens if you try to "restart" your account. it saves the account info while deleting your cities
-						gserver->SendObject(client, gserver->CreateError("server.LoginResponse", -4, "need create player"));
-						client->m_loggedin = true;
-						return;
-					}
-					else
-					{
-						//has an account and cities. process the list and send account info
-
-						amf3object obj;
-						obj["cmd"] = "server.LoginResponse";
-						obj["data"] = amf3object();
-						amf3object & data = obj["data"];
-						data["packageId"] = 0.0f;
-
-						double tslag = unixtime();
-
-						if (client->GetItemCount("consume.1.a") < 10000)
-							client->SetItem("consume.1.a", 10000);
-						client->m_cents = 5000;
-
-						data["player"] = client->ToObject();
-						//UNLOCK(M_CLIENTLIST);
-
-						if (client->m_city.size() == 0)
-						{
-							//problem
-							gserver->consoleLogger->error(Poco::format("Error client has no cities @ %s:%?d", (string)__FILE__, __LINE__));
-							gserver->SendObject(client, gserver->CreateError("server.LoginResponse", -99, "Error with connecting. Please contact support."));
-							return;
-						}
-						client->m_currentcityid = ((PlayerCity*)client->m_city.at(0))->m_castleid;
-						client->m_currentcityindex = 0;
-						client->m_accountexists = true;
-
-
-						//check for holiday status
-						stBuff * holiday = client->GetBuff("FurloughBuff");
-						if (holiday && holiday->endtime > tslag)
-						{
-							//is in holiday - send holiday info too
-
-							string s;
-							{
-								int32_t hours;
-								int32_t mins;
-								int32_t secs = (holiday->endtime - tslag) / 1000;
-
-								hours = secs / 60 / 60;
-								mins = secs / 60 - hours * 60;
-								secs = secs - mins * 60 - hours * 60 * 60;
-
-								std::stringstream ss;
-								ss << hours << "," << mins << "," << secs;
-
-								s = ss.str();
-							}
-
-							data["ok"] = -100;
-							data["msg"] = s;
-							data["errorMsg"] = s;
-						}
-						else
-						{
-							data["ok"] = 1;
-							data["msg"] = "success";
-						}
-
-						gserver->SendObject(client, obj);
-						//SendObject(*req.connection, obj);
-
-						client->m_lag = unixtime() - tslag;
-
-						client->m_loggedin = true;
-
-						gserver->currentplayersonline++;
-						client->SaveToDB();
-
-						return;
-					}
-				}
-			}
-		}
-			return;
-		}
 #pragma endregion
 #pragma region gameClient
 		else if (cmdtype == "gameClient")

@@ -63,14 +63,6 @@ Server::Server()
 	fileLogger = &Logger::create("FileLogger", pFCFile, Message::PRIO_INFORMATION);
 
 	consoleLogger->information("EPS Server starting.");
-	// 	consoleLogger->error("An error message");
-	// 	consoleLogger->warning("A warning message");
-	// 	consoleLogger->information("An information message");
-	// 	fileLogger->warning("An information message");
-	// 	if ((consoleLogger)->information())
-	// 		(consoleLogger)->information("Another informational message", __FILE__, __LINE__);
-	//	Logger::get("ConsoleLogger").error("Another error message");
-
 
 	accountpool = 0;
 	serverpool = 0;
@@ -81,9 +73,6 @@ Server::Server()
 	SaveThreadRunning = false;
 	serverstatus = SERVERSTATUS_STOPPED;//offline
 	servername = "";
-	memset(&m_buildingconfig, 0, sizeof(m_buildingconfig));
-	memset(&m_researchconfig, 0, sizeof(m_researchconfig));
-	memset(&m_troopconfig, 0, sizeof(m_troopconfig));
 
 	mapsize = 500;
 	map = 0;
@@ -121,8 +110,6 @@ Server::Server()
 }
 Server::~Server()
 {
-	// 	if (skts)
-	// 		delete skts;
 	if (map)
 		delete map;
 	delete accountpool;
@@ -516,8 +503,8 @@ void Server::run()
 		map->m_tile[x].m_ownerid = -1;
 		//make every tile an npc
 		//m_map->m_tile[x].m_type = NPC;
-		map->m_tile[x].m_type = rand()%9 + 1;
-		map->m_tile[x].m_level = (rand()%10)+1;
+		map->m_tile[x].m_type = rand() % 9 + 1;
+		map->m_tile[x].m_level = (rand() % 10) + 1;
 
 		if (map->m_tile[x].m_type > 6)
 			map->m_tile[x].m_type = 10;
@@ -533,9 +520,9 @@ void Server::run()
 		}
 
 
-		if ((x+1)%((mapsize*mapsize)/100) == 0)
+		if ((x + 1) % ((mapsize*mapsize) / 100) == 0)
 		{
-			consoleLogger->information(Poco::format("%d%%", int((double(double(x+1)/(mapsize*mapsize)))*double(100)) ));
+			consoleLogger->information(Poco::format("%d%%", int((double(double(x + 1) / (mapsize*mapsize)))*double(100))));
 		}
 	}
 #endif
@@ -1006,7 +993,7 @@ bool Server::Init()
 		if (temp == 0) { consoleLogger->information("Invalid mapsize setting."); return false; }
 		mapsize = atoi(temp);
 		lua_pop(L, 1);
-//		map = new Map(this, mapsize);
+		//		map = new Map(this, mapsize);
 	}
 
 
@@ -1559,574 +1546,7 @@ void Server::TimerThread()
 	return;
 }
 
-void Server::SaveThread()
-{
-	SaveThreadRunning = true;
-	consoleLogger->information("Saving data.");
-
-	// #ifdef __WIN32__
-	// 	_endthread();
-	// 	return 0;
-	// #endif
-
-	Map * newmap;
-	Client * client;
-
-	// 	newmap = new Map(server);
-	// 
-	// 	Log("Loading old map data.");
-	// 
-	// 	for (int x = 0; x < (DEF_MAPSIZE*DEF_MAPSIZE); x += (DEF_MAPSIZE*DEF_MAPSIZE)/10)
-	// 	{
-	// 		char query[1024];
-	// 		sprintf(query, "SELECT `id`,`ownerid`,`type`,`level` FROM `tiles` ORDER BY `id` ASC LIMIT %d,%d", x, ((DEF_MAPSIZE*DEF_MAPSIZE)/10));
-	// 		mysql_query(msql->mySQL, query);
-	// 		st_mysql_res* m_pQueryResult;
-	// 		m_pQueryResult = mysql_store_result(msql->mySQL);
-	// 		int m_iRows = (int)mysql_num_rows(m_pQueryResult);
-	// 		int m_iFields = mysql_num_fields(m_pQueryResult);
-	// 		//MYSQL_FIELD ** field = new MYSQL_FIELD*[m_iFields+1];;
-	// 		MYSQL_ROW myRow;
-	// 		mysql_field_seek(m_pQueryResult, 0);
-	// 
-	// 
-	// 
-	// 		for (int i = 0; i < m_iRows; ++i)
-	// 		{
-	// 			myRow = mysql_fetch_row(m_pQueryResult);
-	// 			int64_t id = _atoi64(myRow[0]);
-	// 			int64_t ownerid = _atoi64(myRow[1]);
-	// 			int64_t type = _atoi64(myRow[2]);
-	// 			int64_t level = _atoi64(myRow[3]);
-	// 
-	// 			newmap->m_tile[id].m_id = id;
-	// 			newmap->m_tile[id].m_ownerid = ownerid;
-	// 			newmap->m_tile[id].m_type = type;
-	// 			newmap->m_tile[id].m_level = level;
-	// 
-	// 			if ((id+1)%((DEF_MAPSIZE*DEF_MAPSIZE)/10) == 0)
-	// 			{
-	// 				Log("%d%%", int((double(double(id+1)/(DEF_MAPSIZE*DEF_MAPSIZE)))*double(100)));
-	// 			}
-	// 		}
-	// 		mysql_free_result(m_pQueryResult);
-	// 	}
-	// 
-	// 	msql->Reset();
-
-	consoleLogger->information("Saving tile data.");
-
-	// 	typedef Poco::Tuple<uint8_t, uint8_t, uint32_t, uint16_t> tiledata;
-	// 	typedef std::vector<tiledata> tiledatalist;
-	// 
-	// 	mtxlist.tiledata.lock();
-	// 	tiledatalist datalist;
-	// 	for (uint32_t i = 0; i < map->mapsize*map->mapsize; ++i)
-	// 	{
-	// 		tiledata data(map->m_tile->m_level, map->m_tile->m_type, map->m_tile->m_ownerid, map->m_tile->m_id);
-	// 		datalist.push_back(data);
-	// 	}
-	// 	mtxlist.tiledata.unlock();
-	// 
-	// 	try
-	// 	{
-	// 		Session ses(serverpool->get());
-	// 		ses << "UPDATE tiles SET level=?,`type`=?,ownerid=? WHERE id=?;", use(datalist), now;
-	// 	}
-	// 	SQLCATCH(void(0));
-
-	consoleLogger->information("Tile data saved.");
-
-#pragma region old save
-	//old save
-	/*string updatestr = "";
-	char temp[40];
-	bool btype, blevel, bowner;
-	for (int i = 0; i < DEF_MAPSIZE*DEF_MAPSIZE; ++i)
-	{
-	btype = blevel = bowner = false;
-	updatestr += "UPDATE `tiles` SET ";
-	if (newmap->m_tile[i].m_type != server->m_map->m_tile[i].m_type)
-	{
-	sprintf_s(temp, 40, "`type`=%d", server->m_map->m_tile[i].m_type);
-	updatestr += temp;
-	btype = true;
-	}
-	if (newmap->m_tile[i].m_level != server->m_map->m_tile[i].m_level)
-	{
-	if (btype)
-	{
-	sprintf_s(temp, 40, ",`level`=%d", server->m_map->m_tile[i].m_level);
-	updatestr += temp;
-	}
-	else
-	{
-	sprintf_s(temp, 40, "`level`=%d", server->m_map->m_tile[i].m_level);
-	updatestr += temp;
-	}
-	blevel = true;
-	}
-	if (newmap->m_tile[i].m_ownerid != server->m_map->m_tile[i].m_ownerid)
-	{
-	if (blevel || btype)
-	{
-	sprintf_s(temp, 40, ",`ownerid`=%d", server->m_map->m_tile[i].m_ownerid);
-	updatestr += temp;
-	}
-	else
-	{
-	sprintf_s(temp, 40, "`ownerid`=%d", server->m_map->m_tile[i].m_ownerid);
-	updatestr += temp;
-	}
-	bowner = true;
-	}
-	if (btype || blevel || bowner)
-	{
-	sprintf_s(temp, 40, " WHERE `id`=%d; ", i);
-	updatestr += temp;
-	}
-	if ((i+1)%((DEF_MAPSIZE*DEF_MAPSIZE)/10) == 0)
-	{
-	Log("%d%%", int((double(double(i+1)/(DEF_MAPSIZE*DEF_MAPSIZE)))*double(100)));
-	}
-	//if (i%10 == 9)
-	if (i%5 == 4)
-	{
-	msql->Update((char*)updatestr.c_str());
-	msql->Reset();
-	updatestr = "";
-	}
-
-	}*/
-#pragma endregion
-
-	/*
-	*
-	*
-	UPDATE `tiles`
-	SET `level` = CASE `id`
-	WHEN 0 THEN 8
-	WHEN 1 THEN 2
-	WHEN 2 THEN 4
-	END
-	WHERE `id` IN (0,1,2);
-	**/
-
-
-	/*
-
-	vector<int32_t>::iterator iter;
-
-	LOCK(M_DELETELIST);
-	if (gserver->m_deletedhero.size() > 0)
-	{
-	for (iter = gserver->m_deletedhero.begin(); iter != gserver->m_deletedhero.end(); ++iter)
-	{
-	sql3->Query("DELETE FROM `heroes` WHERE `id`=%d LIMIT 1", *iter);
-	}
-	}
-	if (gserver->m_deletedcity.size() > 0)
-	{
-	for (iter = gserver->m_deletedcity.begin(); iter != gserver->m_deletedcity.end(); ++iter)
-	{
-	sql3->Query("DELETE FROM `cities` WHERE `id`=%d LIMIT 1", *iter);
-	}
-	}
-	UNLOCK(M_DELETELIST);
-
-	try
-	{
-	LOCK(M_MAP);
-	string fullstr = "";
-	string updatestr = "UPDATE `tiles` SET ";
-	string typehstr  = " `type` = CASE `id` ";
-	string levelhstr = " `level` = CASE `id` ";
-	string ownerhstr = " `ownerid` = CASE `id` ";
-	string typestr  = "";
-	string levelstr = "";
-	string ownerstr = "";
-	string endstr = " END, ";
-	string endstr2 = " END ";
-	string wherestr = "WHERE `id` IN (";
-	string instr  = "";
-	char temp[40];
-	bool btype, blevel, bowner;
-	for (int i = 0; i < map->mapsize*map->mapsize; ++i)
-	{
-	stringstream ss;
-	ss << " WHEN " << i << " THEN " << (int32_t)map->m_tile[i].m_type;
-	typestr += ss.str();
-	ss.str("");
-	ss << " WHEN " << i << " THEN " << (int32_t)map->m_tile[i].m_level;
-	levelstr += ss.str();
-	ss.str("");
-	ss << " WHEN " << i << " THEN " << (int32_t)map->m_tile[i].m_ownerid;
-	ownerstr += ss.str();
-	ss.str("");
-	ss << i;
-	instr += ss.str();
-	ss.str("");
-
-	if (i%200 == 10)//199)
-	{
-	fullstr = updatestr + typehstr + typestr + endstr + levelhstr + levelstr + endstr + ownerhstr + ownerstr + endstr2 + wherestr + instr;
-	fullstr += ");";
-	sql3->Query(fullstr);
-	instr = typestr = levelstr = ownerstr = fullstr = "";
-	}
-	else
-	{
-	instr += ",";
-	}
-	if ((i+1)%((map->mapsize*map->mapsize)/20) == 0)
-	{
-	Log("%d%%", int((double(double(i+1)/(map->mapsize*map->mapsize)))*double(100)));
-	}
-	}
-	UNLOCK(M_MAP);
-	}
-	catch (std::exception& e)
-	{
-	Log("SaveData() Exception: %s", e.what());
-	UNLOCK(M_MAP);
-	}
-	catch(...)
-	{
-	Log("SaveData() Exception.");
-	UNLOCK(M_MAP);
-	}
-	//delete newmap;
-
-
-	Log("Saving alliance data.");
-
-	try
-	{
-	LOCK(M_ALLIANCELIST);
-	for (int i = 0; i < DEF_MAXALLIANCES; ++i)
-	{
-	Alliance * alliance = gserver->m_alliances->m_alliances[i];
-	if (!alliance)
-	continue;
-
-	ResultSet * res = sql3->QueryRes("SELECT COUNT(*) AS a FROM `alliances` WHERE `id`=%d", alliance->m_allianceid);
-	res->next();
-	int alliancecount = res->getInt("a");
-	delete res;
-
-	string members;
-	string enemies;
-	string allies;
-	string neutrals;
-
-
-	stringstream ss;
-
-	for (int j = 0; j < alliance->m_members.size(); ++j)
-	{
-	if (j != 0)
-	ss << "|";
-	Client * temp = gserver->GetClient(alliance->m_members[j].clientid);
-	ss << temp->m_accountid << "," << temp->m_alliancerank;
-	}
-	members = ss.str();
-	ss.str("");
-	for (int j = 0; j < alliance->m_enemies.size(); ++j)
-	{
-	if (j != 0)
-	ss << "|";
-	ss << alliance->m_enemies[j];
-	}
-	enemies = ss.str();
-	ss.str("");
-	for (int j = 0; j < alliance->m_allies.size(); ++j)
-	{
-	if (j != 0)
-	ss << "|";
-	ss << alliance->m_allies[j];
-	}
-	allies = ss.str();
-	ss.str("");
-	for (int j = 0; j < alliance->m_neutral.size(); ++j)
-	{
-	if (j != 0)
-	ss << "|";
-	ss << alliance->m_neutral[j];
-	}
-	neutrals = ss.str();
-	ss.str("");
-
-	members = makesafe(members);
-	enemies = makesafe(enemies);
-	allies = makesafe(allies);
-	neutrals = makesafe(neutrals);
-
-	string note, intro, motd;
-
-	note = makesafe(alliance->m_note);
-	intro = makesafe(alliance->m_intro);
-	motd = makesafe(alliance->m_motd);
-
-
-	if (alliancecount > 0)
-	{
-	//update
-	sql3->Query("UPDATE `alliances` SET `leader`=%d,`name`='%s',`founder`='%s',`note`='%s',`intro`='%s',`motd`='%s',`members`='%s',`enemies`='%s',`allies`='%s',`neutrals`='%s' WHERE `id`=%d LIMIT 1;",
-	alliance->m_ownerid, alliance->m_name.c_str(), alliance->m_founder.c_str(), note.c_str(), intro.c_str(), motd.c_str(), members.c_str(), enemies.c_str(), allies.c_str(), neutrals.c_str(), alliance->m_allianceid);
-	}
-	else
-	{
-	//insert
-	sql3->Query("INSERT INTO `alliances` (`id`,`leader`,`name`,`founder`,`note`,`intro`,`motd`,`members`,`enemies`,`allies`,`neutrals`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s','%s','%s','%s');",
-	alliance->m_allianceid, alliance->m_ownerid,alliance->m_name.c_str(), alliance->m_founder.c_str(), alliance->m_note.c_str(), alliance->m_intro.c_str(), alliance->m_motd.c_str(), members.c_str(), enemies.c_str(), allies.c_str(), neutrals.c_str());
-	}
-	}
-	UNLOCK(M_ALLIANCELIST);
-	}
-	catch (std::exception& e)
-	{
-	Log("SaveData() Exception: %s", e.what());
-	UNLOCK(M_ALLIANCELIST);
-	}
-	catch(...)
-	{
-	Log("SaveData() Exception.");
-	UNLOCK(M_ALLIANCELIST);
-	}
-
-	Log("Saving player data.");
-
-	char temp1[1000];
-
-	try
-	{
-	LOCK(M_CLIENTLIST);
-	for (int i = 0; i < gserver->maxplayers; ++i)
-	{
-	if (!gserver->m_clients[i])
-	continue;
-	Client * tempclient = gserver->m_clients[i];
-	string buffs;
-	string research;
-	string items;
-	string misc;
-
-	memset(temp1, 0, 1000);
-
-	stResearch * rsrch;
-	for (int j = 0; j < 25; ++j)
-	{
-	if (j != 0)
-	research += "|";
-	rsrch = &gserver->m_clients[i]->m_research[j];
-	sprintf_s(temp1, 1000, "%d,%d,%d,"DBL","DBL"", j, rsrch->level, rsrch->castleid, rsrch->starttime, rsrch->endtime);
-	research += temp1;
-	}
-
-	for (int j = 0; j < gserver->m_clients[i]->m_buffs.size(); ++j)
-	{
-	if (gserver->m_clients[i]->m_buffs[j].id.length() > 0)
-	{
-	if (j != 0)
-	buffs += "|";
-	sprintf_s(temp1, 1000, "%s,%s,"DBL"", (char*)gserver->m_clients[i]->m_buffs[j].id.c_str(), (char*)gserver->m_clients[i]->m_buffs[j].desc.c_str(), gserver->m_clients[i]->m_buffs[j].endtime);
-	buffs += temp1;
-	}
-	}
-
-	//sprintf_s(temp1, 1000, "%d", tempclient->m_cents);
-	//misc = temp1;
-
-	{
-	stringstream ss;
-	for (int j = 1; j < DEF_MAXITEMS; ++j)
-	{
-	if (gserver->m_clients[i]->m_items[j].id.length() > 0)
-	{
-	if (j != 1)
-	ss << "|";
-	ss << gserver->m_clients[i]->m_items[j].id << "," << gserver->m_clients[i]->m_items[j].count;
-	}
-	}
-	items = ss.str();
-	}
-	{
-	stringstream ss;
-	ss << tempclient->m_icon << "," << tempclient->m_allianceapply << "," << tempclient->m_changedface;
-	misc = ss.str();
-	}
-	sql3->Query("UPDATE `accounts` SET `username`='%s',`lastlogin`="DBL",`ipaddress`='%s',`status`=%d,`buffs`='%s',`flag`='%s',`faceurl`='%s',`research`='%s',`items`='%s',`allianceid`=%d,`alliancerank`=%d,`misc`='%s',`cents`=%d,`prestige`="DBL",`honor`="DBL" WHERE `accountid`="XI64";",
-	(char*)tempclient->m_playername.c_str(), tempclient->m_lastlogin, tempclient->m_ipaddress, tempclient->m_status, (char*)buffs.c_str(),
-	(char*)tempclient->m_flag.c_str(), (char*)tempclient->m_faceurl.c_str(), (char*)research.c_str(), (char*)items.c_str(), (int)tempclient->m_allianceid, (int)tempclient->m_alliancerank, (char*)misc.c_str(), tempclient->m_cents, tempclient->Prestige(), tempclient->m_honor, tempclient->m_accountid);
-
-	try
-	{
-	LOCK(M_CASTLELIST);
-	if (tempclient)
-	for (int k = 0; k < gserver->m_clients[i]->m_city.size(); ++k)
-	{
-	PlayerCity * tempcity = gserver->m_clients[i]->m_city[k];
-	string misc2 = "";
-	string transingtrades = "";
-	string troop = "";
-	string buildings = "";
-	string fortification = "";
-	string trades = "";
-
-	ResultSet * res = sql3->QueryRes("SELECT COUNT(*) AS a FROM `cities` WHERE `fieldid`=%d", tempcity->m_tileid);
-	res->next();
-	int citycount = 0;
-	if (res != 0)
-	{
-	citycount = res->getInt("a");
-	delete res;
-	}
-
-	sprintf_s(temp1, 1000, "%d,%d,%d,%d,%d", tempcity->m_forts.traps, tempcity->m_forts.abatis, tempcity->m_forts.towers, tempcity->m_forts.logs, tempcity->m_forts.trebs);
-	fortification = temp1;
-
-	for (int j = 2; j <= 13; ++j)
-	{
-	if (j != 2)
-	troop += "|";
-	sprintf_s(temp1, 1000, XI64, tempcity->GetTroops(j));
-	troop += temp1;
-	}
-
-	sprintf_s(temp1, 1000, "%d,"DBL","DBL","DBL","DBL","DBL",%d,%d,"DBL"", tempcity->m_population, tempcity->m_workrate.gold, tempcity->m_workrate.food, tempcity->m_workrate.wood, tempcity->m_workrate.iron, tempcity->m_workrate.stone, (int)tempcity->m_loyalty, (int)tempcity->m_grievance, tempcity->m_timers.updateresources);
-	misc2 = temp1;
-
-	for (int j = 0; j < 35; ++j)
-	{
-	if (tempcity->m_innerbuildings[j].type > 0)
-	{
-	if (j != 0)
-	buildings += "|";
-	sprintf_s(temp1, 1000, "%d,%d,%d,%d,"DBL","DBL"", tempcity->m_innerbuildings[j].type, tempcity->m_innerbuildings[j].level, tempcity->m_innerbuildings[j].id, tempcity->m_innerbuildings[j].status, tempcity->m_innerbuildings[j].starttime, tempcity->m_innerbuildings[j].endtime);
-	buildings += temp1;
-	}
-	}
-	for (int j = 0; j <= 40; ++j)
-	{
-	if (tempcity->m_outerbuildings[j].type > 0)
-	{
-	buildings += "|";
-	sprintf_s(temp1, 1000, "%d,%d,%d,%d,"DBL","DBL"", tempcity->m_outerbuildings[j].type, tempcity->m_outerbuildings[j].level, tempcity->m_outerbuildings[j].id, tempcity->m_outerbuildings[j].status, tempcity->m_outerbuildings[j].starttime, tempcity->m_outerbuildings[j].endtime);
-	buildings += temp1;
-	}
-	}
-
-	if (citycount > 0)
-	{
-	//update
-	sql3->Query("UPDATE `cities` SET `misc`='%s',`status`=%d,`allowalliance`=%d,`logurl`='%s',`fieldid`=%d,`transingtrades`='%s',`troop`='%s',`name`='%s',`buildings`='%s',`fortification`='%s',`trades`='%s', \
-	`gooutforbattle`=%d,`hasenemy`=%d,`gold`="DBL",`food`="DBL",`wood`="DBL",`iron`="DBL",`stone`="DBL",`creation`="DBL" WHERE `fieldid`=%d LIMIT 1;",
-	(char*)misc2.c_str(), (int)tempcity->m_status, (int)tempcity->m_allowalliance, (char*)tempcity->m_logurl.c_str(), tempcity->m_tileid, (char*)transingtrades.c_str(),
-	(char*)troop.c_str(), (char*)tempcity->m_cityname.c_str(), (char*)buildings.c_str(), (char*)fortification.c_str(), (char*)trades.c_str(), (int)tempcity->m_gooutforbattle, (tempcity->m_hasenemy)?1:0,
-	tempcity->m_resources.gold, tempcity->m_resources.food, tempcity->m_resources.wood, tempcity->m_resources.iron, tempcity->m_resources.stone, tempcity->m_creation, tempcity->m_tileid);
-	}
-	else
-	{
-	//insert
-	sql3->Query("INSERT INTO `cities` (`accountid`,`misc`,`status`,`allowalliance`,`logurl`,`fieldid`,`transingtrades`,`troop`,`name`,`buildings`,`fortification`,`trades`,`gooutforbattle`,`hasenemy`,`gold`,`food`,`wood`,`iron`,`stone`,`creation`) \
-	VALUES (%d, '%s',%d,%d,'%s',%d,'%s','%s','%s','%s','%s','%s',%d,%d,"DBL","DBL","DBL","DBL","DBL","DBL");",
-	tempcity->m_accountid, (char*)misc2.c_str(), (int)tempcity->m_status, (int)tempcity->m_allowalliance, (char*)tempcity->m_logurl.c_str(), tempcity->m_tileid, (char*)transingtrades.c_str(), (char*)troop.c_str(), (char*)tempcity->m_cityname.c_str(), (char*)buildings.c_str(), (char*)fortification.c_str(), (char*)trades.c_str(), (int)tempcity->m_gooutforbattle,
-	(tempcity->m_hasenemy)?1:0, tempcity->m_resources.gold, tempcity->m_resources.food, tempcity->m_resources.wood, tempcity->m_resources.iron, tempcity->m_resources.stone, tempcity->m_creation);
-	}
-
-
-	try
-	{
-	LOCK(M_HEROLIST);
-	for (int a = 0; a < 10; ++a)
-	{
-	Hero * temphero = tempcity->m_heroes[a];
-
-	if (temphero)
-	{
-	ResultSet * res = sql3->QueryRes("SELECT COUNT(*) AS a FROM `heroes` WHERE `id`=%d", temphero->m_id);
-	res->next();
-	int herocount = 0;
-	if (res != 0)
-	{
-	herocount = res->getInt("a");
-	delete res;
-	}
-
-	if (herocount > 0)
-	{
-	//update
-	sql3->Query("UPDATE `heroes` SET `ownerid`="XI64",`castleid`=%d,`name`='%s',`status`=%d,`itemid`=%d,`itemamount`=%d,`basestratagem`=%d,`stratagem`=%d,`stratagemadded`=%d,`stratagembuffadded`=%d,\
-	`basepower`=%d,`power`=%d,`poweradded`=%d,`powerbuffadded`=%d,`basemanagement`=%d,`management`=%d,`managementadded`=%d,`managementbuffadded`=%d,\
-	`logurl`='%s',`remainpoint`=%d,`level`=%d,`upgradeexp`="DBL",`experience`="DBL",`loyalty`=%d WHERE `id`="XI64" LIMIT 1;",
-	tempcity->m_accountid, tempcity->m_castleid, temphero->m_name.c_str(), (int)temphero->m_status, temphero->m_itemid, temphero->m_itemamount, (int)temphero->m_basestratagem, (int)temphero->m_stratagem, (int)temphero->m_stratagemadded, (int)temphero->m_stratagembuffadded,
-	(int)temphero->m_basepower, (int)temphero->m_power, (int)temphero->m_poweradded, (int)temphero->m_powerbuffadded, (int)temphero->m_basemanagement, (int)temphero->m_management, (int)temphero->m_managementadded, (int)temphero->m_managementbuffadded,
-	(char*)temphero->m_logourl.c_str(), (int)temphero->m_remainpoint, (int)temphero->m_level, temphero->m_upgradeexp, temphero->m_experience, (int)temphero->m_loyalty, temphero->m_id);
-	}
-	else
-	{
-	//insert
-	sql3->Query("INSERT INTO `heroes` (`id`,`ownerid`,`castleid`,`name`,`status`,`itemid`,`itemamount`,`basestratagem`,`stratagem`,`stratagemadded`,`stratagembuffadded`,\
-	`basepower`,`power`,`poweradded`,`powerbuffadded`,`basemanagement`,`management`,`managementadded`,`managementbuffadded`,\
-	`logurl`,`remainpoint`,`level`,`upgradeexp`,`experience`,`loyalty`) VALUES ("XI64","XI64",%d,'%s',%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,'%s',%d,%d,"DBL","DBL",%d);",
-	temphero->m_id, tempcity->m_accountid, tempcity->m_castleid, temphero->m_name.c_str(), (int)temphero->m_status, temphero->m_itemid, temphero->m_itemamount, (int)temphero->m_basestratagem, (int)temphero->m_stratagem, (int)temphero->m_stratagemadded, (int)temphero->m_stratagembuffadded,
-	(int)temphero->m_basepower, (int)temphero->m_power, (int)temphero->m_poweradded, (int)temphero->m_powerbuffadded, (int)temphero->m_basemanagement, (int)temphero->m_management, (int)temphero->m_managementadded, (int)temphero->m_managementbuffadded,
-	(char*)temphero->m_logourl.c_str(), (int)temphero->m_remainpoint, (int)temphero->m_level, temphero->m_upgradeexp, temphero->m_experience, (int)temphero->m_loyalty);
-	}
-	}
-	}
-	UNLOCK(M_HEROLIST);
-	}
-	catch (std::exception& e)
-	{
-	Log("SaveData() Exception: %s", e.what());
-	UNLOCK(M_HEROLIST);
-	}
-	catch(...)
-	{
-	Log("SaveData() Exception.");
-	UNLOCK(M_HEROLIST);
-	}
-
-	}
-	UNLOCK(M_CASTLELIST);
-	}
-	catch (std::exception& e)
-	{
-	Log("SaveData() Exception: %s", e.what());
-	UNLOCK(M_CASTLELIST);
-	}
-	catch(...)
-	{
-	Log("SaveData() Exception.");
-	UNLOCK(M_CASTLELIST);
-	}
-	if ((i+1)%(gserver->maxplayers/10) == 0)
-	{
-	Log("%d%%", int((double(double(i+1)/gserver->maxplayers))*double(100)));
-	}
-	}
-	UNLOCK(M_CLIENTLIST);
-	}
-	catch (std::exception& e)
-	{
-	Log("SaveData() Exception: %s", e.what());
-	UNLOCK(M_CLIENTLIST);
-	}
-	catch(...)
-	{
-	Log("SaveData() Exception.");
-	UNLOCK(M_CLIENTLIST);
-	}*/
-
-	consoleLogger->information("Save Complete.");
-	SaveThreadRunning = false;
-	return;
-}
-
-
 // Server code
-
 int32_t Server::CalcTroopSpeed(PlayerCity * city, stTroops & troops, int32_t starttile, int32_t endtile)
 {
 	int32_t fx, fy, tx, ty;
@@ -2425,6 +1845,7 @@ void Server::MassDisconnect()
 			data["msg"] = "Server shutting down.";
 
 			SendObject(client->socket, obj);
+			SendObject(client->socket, CreateError3("server.ConnectionLost", 4));
 
 			client->socket->stop();
 			//shutdown(sockets->fdsockets[i].fdsock, 0);
@@ -2434,11 +1855,8 @@ void Server::MassDisconnect()
 }
 void Server::MassMessage(string str, bool nosender /* = false*/, bool tv /* = false*/, bool all /* = false*/)
 {
-	std::list<Client*>::iterator playeriter;
-	for (playeriter = players.begin(); playeriter != players.end(); ++playeriter)
+	for (Client * client : players)
 	{
-		Client * client = *playeriter;
-
 		amf3object obj;
 		obj["cmd"] = "server.SystemInfoMsg";
 		obj["data"] = amf3object();
@@ -2662,7 +2080,7 @@ bool Server::comparemanagement(stHeroRank first, stHeroRank second)
 }
 bool Server::comparegrade(stHeroRank first, stHeroRank second)
 {
-	if (first.grade> second.grade)
+	if (first.grade > second.grade)
 		return true;
 	else
 		return false;
@@ -2802,62 +2220,53 @@ void Server::SortCastles()
 		iter->rank = num++;
 	}
 }
+//unused? potentially erroring
 int32_t  Server::GetClientIndex(int32_t accountid)
 {
 	int32_t i = 0;
-	std::list<Client*>::iterator playeriter;
-	for (playeriter = players.begin(); playeriter != players.end(); ++playeriter)
+	for (Client * client : players)
 	{
-		Client * client = *playeriter;
 		if (client->m_accountid == accountid)
 			return i;
 		++i;
 	}
- 	return -1;
+	return -1;
 }
 Client * Server::GetClientByCastle(int32_t castleid)
 {
-	std::list<Client*>::iterator playeriter;
-	for (playeriter = players.begin(); playeriter != players.end(); ++playeriter)
+	for (Client * client : players)
 	{
-		Client * client = *playeriter;
 		if (client->GetCity(castleid) != 0)
 			return client;
 	}
- 	return 0;
+	return 0;
 }
 Client * Server::GetClient(int32_t accountid)
 {
-	std::list<Client*>::iterator playeriter;
-	for (playeriter = players.begin(); playeriter != players.end(); ++playeriter)
+	for (Client * client : players)
 	{
-		Client * client = *playeriter;
 		if (client->m_accountid == accountid)
 			return client;
 	}
- 	return 0;
+	return 0;
 }
 Client * Server::GetClientByParent(int accountid)
 {
-	std::list<Client*>::iterator playeriter;
-	for (playeriter = players.begin(); playeriter != players.end(); ++playeriter)
+	for (Client * client : players)
 	{
-		Client * client = *playeriter;
 		if (client->masteraccountid == accountid)
 			return client;
 	}
- 	return 0;
+	return 0;
 }
 Client * Server::GetClientByName(string name)
 {
-	std::list<Client*>::iterator playeriter;
-	for (playeriter = players.begin(); playeriter != players.end(); ++playeriter)
+	for (Client * client : players)
 	{
-		Client * client = *playeriter;
 		if (client->m_playername == name)
 			return client;
 	}
- 	return 0;
+	return 0;
 }
 void Server::CloseClient(Client * client, int typecode, string message)
 {
@@ -2971,12 +2380,6 @@ bool Server::ParseChat(Client * client, string str)
 				}
 				else
 				{
-					m_alliances->AllianceById(client->m_allianceid)->m_motd = (tempstr + strlen(command) + 2);
-					string s;
-					s = "Alliance MOTD set to '";
-					s += m_alliances->AllianceById(client->m_allianceid)->m_motd;
-					s += "'";
-					data["msg"] = s;
 				}
 			}
 			else if (!strcmp(command, "restart"))
@@ -3042,10 +2445,6 @@ bool Server::ParseChat(Client * client, string str)
 			}*/
 			else if (!strcmp(command, "resources"))
 			{
-				stResources res(10000000, 10000000, 10000000, 10000000, 10000000);
-				client->GetFocusCity()->m_resources += res;
-				data["msg"] = "Resources granted.";
-				client->GetFocusCity()->ResourceUpdate();
 			}
 			else if (!strcmp(command, "tempvar"))
 			{
@@ -3131,6 +2530,7 @@ bool Server::ParseChat(Client * client, string str)
 	}
 	return true;
 }
+
 int16_t Server::GetRelation(int32_t client1, int32_t client2)
 {
 	if (client1 >= 0 && client2 >= 0)
@@ -3275,7 +2675,7 @@ void * Server::DoRankSearch(string key, int8_t type, void * subtype, int16_t pag
 		m_searchallianceranklist.push_back(searchrank);
 		return &m_searchallianceranklist.back();
 	}
-return 0;
+	return 0;
 }
 void Server::CheckRankSearchTimeouts(uint64_t time)
 {
