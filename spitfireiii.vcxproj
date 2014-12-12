@@ -11,15 +11,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Alliance.cpp" />
+    <ClCompile Include="src\AllianceCore.cpp" />
     <ClCompile Include="src\amf3.cpp" />
+    <ClCompile Include="src\City.cpp" />
+    <ClCompile Include="src\Client.cpp" />
+    <ClCompile Include="src\combat.cpp" />
+    <ClCompile Include="src\connection.cpp" />
     <ClCompile Include="src\funcs.cpp" />
+    <ClCompile Include="src\Hero.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\reply.cpp" />
+    <ClCompile Include="src\request_handler.cpp" />
+    <ClCompile Include="src\Server.cpp" />
     <ClCompile Include="src\structs.h" />
+    <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Alliance.h" />
+    <ClInclude Include="src\AllianceCore.h" />
     <ClInclude Include="src\amf3.h" />
+    <ClInclude Include="src\City.h" />
+    <ClInclude Include="src\Client.h" />
+    <ClInclude Include="src\combat.h" />
+    <ClInclude Include="src\connection.h" />
     <ClInclude Include="src\funcs.h" />
+    <ClInclude Include="src\Hero.h" />
     <ClInclude Include="src\includes.h" />
+    <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\reply.h" />
+    <ClInclude Include="src\request.h" />
+    <ClInclude Include="src\request_handler.h" />
+    <ClInclude Include="src\Server.h" />
+    <ClInclude Include="src\Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\config.lua" />
@@ -71,11 +96,13 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_WIN32_WINNT=0x0601;BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0601;BOOST_ALL_DYN_LINK;WIN32;_DEBUG;_CONSOLE;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\boost_1_57_0\boost;include</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
       <FunctionLevelLinking>true</FunctionLevelLinking>
-      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

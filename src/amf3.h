@@ -38,7 +38,8 @@
 
 #include <math.h>
 
-using namespace std;
+using std::string;
+
 
 class amf3object;
 class amf3array;
@@ -115,21 +116,21 @@ public:
 		return -1;
 	}
 
-	vector<string> propnames;
-	vector<T> properties;
+	std::vector<string> propnames;
+	std::vector<T> properties;
 };
 class amf3classdef
 {
 public:
 	amf3classdef(void);
-	amf3classdef(string name, vector<string> & properties, bool dynamic, bool externalizable);
+	amf3classdef(string name, std::vector<string> & properties, bool dynamic, bool externalizable);
 	amf3classdef(const amf3classdef & classdef);
 	~amf3classdef(void);
 
 	string name;
 	bool dynamic;
 	bool externalizable;
-	vector<string> properties;
+	std::vector<string> properties;
 	inline bool IsEqual(amf3classdef & obj) const
 	{
 		if (name != obj.name || dynamic != obj.dynamic || externalizable != obj.externalizable || (properties.size() != obj.properties.size()))
@@ -170,8 +171,8 @@ public:
 		int integer;
 		double number;
 	} _value;
-	shared_ptr<amf3array> _array;
-	shared_ptr<amf3objectmap> _object;
+	std::shared_ptr<amf3array> _array;
+	std::shared_ptr<amf3objectmap> _object;
 
 	const char * c_str()
 	{
@@ -322,9 +323,9 @@ public:
 	amf3reflist<amf3object> objectlist;
 	amf3reflist<amf3object> encapslist;
 	amf3reflist<amf3classdef> deflist;
-	map<int, amf3object> objectTable;
-	map<int, string> stringTable;
-	map<int, amf3classdef> classdefTable;
+	std::map<int, amf3object> objectTable;
+	std::map<int, string> stringTable;
+	std::map<int, amf3classdef> classdefTable;
 
 	char * stream;
 	int position;
@@ -419,7 +420,7 @@ public:
 
 
 	amf3reflist<amf3object> associative;
-	vector<amf3object> dense;
+	std::vector<amf3object> dense;
 
 	char type;
 };

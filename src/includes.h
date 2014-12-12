@@ -54,6 +54,8 @@
 #include <unistd.h>
 #include <inttypes.h>
 #else
+#define WIN32_LEAN_AND_MEAN   
+#include <windows.h>
 #include <tchar.h>
 #include <lua5.2/lua.hpp>
 #include <lua5.2/lauxlib.h>
@@ -68,6 +70,7 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include <set>
 #include <queue>
 #include <string>
 #include <sstream>
@@ -88,3 +91,24 @@
 #include <boost/thread/shared_lock_guard.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
+
+#include "Poco/Data/Common.h"
+//#include "Poco/Data/SQLite/Connector.h"
+#include "Poco/Data/MySQL/Connector.h"
+#include "Poco/Data/MySQL/MySQLException.h"
+#include "Poco/Data/SessionPool.h"
+#include "Poco/Data/RecordSet.h"
+#include "Poco/Exception.h"
+
+#include "Poco/Logger.h"
+#include "Poco/PatternFormatter.h"
+#include "Poco/FormattingChannel.h"
+#include "Poco/ConsoleChannel.h"
+#include "Poco/FileChannel.h"
+
+#include "Poco/Message.h"
+
+
+using std::string;

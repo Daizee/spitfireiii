@@ -2,7 +2,7 @@
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
 bin_PROGRAMS = spitfire
-spitfire_SOURCES = src/amf3.cpp src/funcs.cpp src/main.cpp
+spitfire_SOURCES = src/amf3.cpp src/funcs.cpp src/main.cpp src/Server.cpp src/connection.cpp
 
 
 spitfire_CPPFLAGS = -std=gnu++11 -Wno-write-strings -Wno-narrowing -Wno-conversion-null

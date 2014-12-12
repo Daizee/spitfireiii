@@ -321,7 +321,7 @@ size_t ci_find(const string& str1, const string& str2)
 
 string makesafe(string in)
 {
-	stringstream ss;
+	std::stringstream ss;
 	for (int i = 0; i < in.size(); ++i)
 	{
 		if (((in[i] >= '0') && (in[i] <= '9')) || ((in[i] >= 'A') && (in[i] <= 'Z')) || ((in[i] >= 'a') && (in[i] <= 'z')) || (in[i] == '_') || (in[i] == '.') || (in[i] == '/') || (in[i] == ':') || (in[i] == '@') || (in[i] == '|'))

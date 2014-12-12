@@ -38,7 +38,7 @@ amf3classdef::amf3classdef(void)
 	externalizable = false;
 	amf3classdefcreate3++;
 }
-amf3classdef::amf3classdef(string name, vector<string> & properties, bool dynamic, bool externalizable)
+amf3classdef::amf3classdef(string name, std::vector<string> & properties, bool dynamic, bool externalizable)
 {
 	amf3classdefcreate3++;
 	this->name = name;
@@ -110,7 +110,7 @@ void amf3object::InternalCopy(const amf3object &val) {
 void amf3object::InternalCopy(const amf3array &val) {
 	type = Array;
 	memset(&_value, 0, sizeof(_value));
-	_array = shared_ptr<amf3array>(new amf3array(val));
+	_array = std::shared_ptr<amf3array>(new amf3array(val));
 	//_value._array = new amf3array3(val);
 }
 
@@ -336,12 +336,12 @@ amf3object::operator string()
 		}
 		case Integer:
 		{
-			stringstream ss; ss << this->operator int32_t();
+			std::stringstream ss; ss << this->operator int32_t();
 			return ss.str();
 		}
 		case Number:
 		{
-			stringstream ss; ss << this->operator double();
+			std::stringstream ss; ss << this->operator double();
 			return ss.str();
 		}
 		case String:
@@ -435,7 +435,7 @@ amf3object::operator amf3array&()
 		default:
 			//really reset? or do a throw?
 			this->Reset();
-			_array = shared_ptr<amf3array>(new amf3array());
+			_array = std::shared_ptr<amf3array>(new amf3array());
 			return *(_array.get());
 		case Array:
 			return *(_array.get());
@@ -452,7 +452,7 @@ amf3object& amf3object::operator[](const char *key) {
 	}
 	if ((type == Null) || (type == Undefined)) {
 		type = Object;
-		_object = shared_ptr<amf3objectmap>(new amf3objectmap);
+		_object = std::shared_ptr<amf3objectmap>(new amf3objectmap);
 	}
 	if (_object->Exists(string(key)) < 0)
 	{
@@ -761,10 +761,10 @@ amf3object amf3parser::ReadNextObject(void)
 			obj.date = ReadDate();
 			return obj;
 		case Array:
-			obj._array = shared_ptr<amf3array>(ReadArray());
+			obj._array = std::shared_ptr<amf3array>(ReadArray());
 			return obj;
 		case Object:
-			obj._object = shared_ptr<amf3objectmap>(ReadAMF3Object());
+			obj._object = std::shared_ptr<amf3objectmap>(ReadAMF3Object());
 			return obj;
 			//default:
 			//Log("Invalid object type (%d)", type);
@@ -946,7 +946,7 @@ amf3objectmap * amf3parser::ReadAMF3Object(void)
 			throw "Externalized object. CATCH()";
 		// TODO FIX IT
 
-		vector<string> properties;
+		std::vector<string> properties;
 		//properties = new vector<char *>;
 		//properties = new amfreflist(2);
 		//propnames = new amfreflist();
@@ -1184,7 +1184,7 @@ void amf3writer::TypelessWrite(string str)
 	}
 
 
-	map<int, string>::const_iterator iter;
+	std::map<int, string>::const_iterator iter;
 	iter = stringTable.begin();
 	for (int i = 0; i < stringTable.size(); ++iter, ++i)
 	{
@@ -1200,7 +1200,7 @@ void amf3writer::TypelessWrite(string str)
 	strcpy_s(stream + position, str.length() + 1, str.c_str());
 	position += str.length();
 
-	typedef pair <int32_t, string> Int_Pair;
+	typedef std::pair <int32_t, string> Int_Pair;
 	stringTable.insert(Int_Pair(int32_t(stringTable.size()), str));
 	strlist.AddObj(str);
 }
@@ -1218,7 +1218,7 @@ void amf3writer::TypelessWrite(amf3array * _array, amf3object & obj)
 	if (CheckObjectTable(obj))
 		return;
 
-	typedef pair <int32_t, amf3object> Int_Pair;
+	typedef std::pair <int32_t, amf3object> Int_Pair;
 	objectTable.insert(Int_Pair(int32_t(objectTable.size()), obj));
 	//encapslist.AddObj(obj);
 
@@ -1244,7 +1244,7 @@ void amf3writer::TypelessWrite(amf3objectmap * _object, amf3object & obj)
 		return;
 
 	bool found = false;
-	map<int32_t, amf3classdef>::const_iterator iter;
+	std::map<int32_t, amf3classdef>::const_iterator iter;
 	iter = classdefTable.begin();
 	for (int32_t i = 0; i < classdefTable.size(); ++iter, ++i)
 	{
@@ -1265,7 +1265,7 @@ void amf3writer::TypelessWrite(amf3objectmap * _object, amf3object & obj)
 
 	if (!found)
 	{
-		typedef pair <int32_t, amf3classdef> Int_Pair;
+		typedef std::pair <int32_t, amf3classdef> Int_Pair;
 		classdefTable.insert(Int_Pair(int32_t(classdefTable.size()), obj._object->classdef));
 		deflist.AddObj(obj._object->classdef);
 
@@ -1285,7 +1285,7 @@ void amf3writer::TypelessWrite(amf3objectmap * _object, amf3object & obj)
 		}
 	}
 
-	typedef pair <int32_t, amf3object> Int_Pair;
+	typedef std::pair <int32_t, amf3object> Int_Pair;
 	objectTable.insert(Int_Pair(int32_t(objectTable.size()), obj));
 	//encapslist.AddObj(obj);
 

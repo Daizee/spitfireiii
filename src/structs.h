@@ -137,11 +137,11 @@ struct stItemConfig
 };
 struct stRarityGamble
 {
-	vector<stItemConfig*> common;
-	vector<stItemConfig*> special;
-	vector<stItemConfig*> rare;
-	vector<stItemConfig*> superrare;
-	vector<stItemConfig*> ultrarare;
+	std::vector<stItemConfig*> common;
+	std::vector<stItemConfig*> special;
+	std::vector<stItemConfig*> rare;
+	std::vector<stItemConfig*> superrare;
+	std::vector<stItemConfig*> ultrarare;
 };
 struct stBuildingConfig
 {
@@ -153,9 +153,9 @@ struct stBuildingConfig
 	int32_t population;
 	double time;
 	double destructtime;
-	vector<stPrereq> buildings;
-	vector<stPrereq> techs;
-	vector<stPrereq> items;
+	std::vector<stPrereq> buildings;
+	std::vector<stPrereq> techs;
+	std::vector<stPrereq> items;
 	int32_t limit;
 	int32_t inside;
 	int32_t prestige;
@@ -358,29 +358,29 @@ struct stCastleRank
 };
 struct stSearchClientRank
 {
-	list<stClientRank> ranklist;
-	list<stClientRank> * rlist;
+	std::list<stClientRank> ranklist;
+	std::list<stClientRank> * rlist;
 	string key;
 	uint64_t lastaccess;
 };
 struct stSearchHeroRank
 {
-	list<stHeroRank> ranklist;
-	list<stHeroRank> * rlist;
+	std::list<stHeroRank> ranklist;
+	std::list<stHeroRank> * rlist;
 	string key;
 	uint64_t lastaccess;
 };
 struct stSearchCastleRank
 {
-	list<stCastleRank> ranklist;
-	list<stCastleRank> * rlist;
+	std::list<stCastleRank> ranklist;
+	std::list<stCastleRank> * rlist;
 	string key;
 	uint64_t lastaccess;
 };
 struct stSearchAllianceRank
 {
-	list<stAlliance> ranklist;
-	list<stAlliance> * rlist;
+	std::list<stAlliance> ranklist;
+	std::list<stAlliance> * rlist;
 	string key;
 	uint64_t lastaccess;
 };
@@ -403,7 +403,7 @@ struct stTroopQueue
 	int8_t status;
 	int16_t positionid;
 	int32_t nextqueueid;
-	list<stTroopTrain> queue;
+	std::list<stTroopTrain> queue;
 };
 struct stBuff
 {
@@ -441,7 +441,7 @@ struct stPackage
 	int64_t providetime;
 	int64_t expiredtime;
 	string claimedtime;
-	vector<stItem> items;
+	std::vector<stItem> items;
 };
 
 #pragma endregion

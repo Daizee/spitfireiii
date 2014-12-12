@@ -50,7 +50,6 @@
 
 #include <math.h>
 
-using namespace std;
 
 extern char itoh(int num);
 extern int htoi(char hex);
@@ -197,9 +196,9 @@ extern int asprintf(char **str, const char *fmt, ...);
 
 #define GETXYFROMID4(b,a,c,d) a = short(c / d); b = short(c % d);//x, y, id, mapsize
 
-#define GETXYFROMID(a) short yfromid = short(a / gserver->mapsize); short xfromid = short(a % gserver->mapsize);
+#define GETXYFROMID(a) short yfromid = short(a / mapsize); short xfromid = short(a % mapsize);
 
-#define GETIDFROMXY(x,y) int idfromxy = y*gserver->mapsize+x;
+#define GETIDFROMXY(x,y) int idfromxy = y*mapsize+x;
 
 #define DEF_RESEARCH 1
 #define DEF_BUILDING 2

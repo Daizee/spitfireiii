@@ -26,28 +26,171 @@
 #include "includes.h"
 #include "funcs.h"
 #include "amf3.h"
+
+#ifndef WIN32
+#include <stdio.h>
+void sigfunc(int sig_no);
+#else
+#define WIN32_LEAN_AND_MEAN   
+#include <windows.h>
+#include <tchar.h>
+#include <iostream>
+#include <signal.h>
 #include <conio.h>
+BOOL WINAPI ConsoleHandler(DWORD CEvent);
+#endif
+
+#include "Server.h"
+
+Server * gserver = 0;
 
 int main(int argc, char* argv[])
 {
-	for (int i = 0; i < 1000; ++i)
+#ifndef WIN32
+	struct sigaction sa = { 0 };
+	sa.sa_handler = &sigfunc;
+	sigaction(SIGINT, &sa, 0);
+	sigaction(SIGHUP, &sa, 0);
+	sigaction(SIGUSR1, &sa, 0);
+	sigaction(SIGUSR2, &sa, 0);
+#else
+	if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)ConsoleHandler, TRUE) == FALSE)
 	{
-		amf3object obj = amf3object();
-		amf3object data = amf3object();
-		obj["data"] = data;
-		data["teststuff"] = 238475;
-		amf3array array = amf3array();
-		for (int x = 0; x < 1000; x++)
-		{
-			amf3object dummy = amf3object();
-			dummy["data"] = string("test");
-			array.Add(dummy);
-		}
-		obj["test"] = "test";
-		data["array"] = array;
-		cout << i << endl;
+		// unable to install handler... 
+		// display message to the user
+		printf("Unable to install handler!\n");
+		return -1;
 	}
-	getch();
+#endif
+
+	srand(unixtime());
+
+	gserver = new Server();
+
+	gserver->serverstatus = SERVERSTATUS_STARTING;
+
+	try {
+		//Initialize server and load config files
+		if (!gserver->Init()) { return 0; }
+
+		//Connect to SQL server
+		if (!gserver->ConnectSQL()) { return 0; }
+
+		//Open sockets
+		if (!gserver->InitSockets()) { return 0; }
+	}
+	catch (std::exception& e)
+	{
+		gserver->consoleLogger->fatal(Poco::format("Init() Exception: %s", (string)e.what()));
+		return 0;
+	}
+	catch (...)
+	{
+		gserver->consoleLogger->fatal("Unspecified Init() Exception.");
+		return 0;
+	}
+
+	//Server is finally online here
+	gserver->serverstatus = SERVERSTATUS_ONLINE;
+
+
+	// Run the server until stopped.
+	try
+	{
+		gserver->run();
+	}
+	catch (Poco::Data::MySQL::MySQLException * e)
+	{
+		gserver->consoleLogger->fatal(Poco::format("SQL Exception: %s", e->displayText()));
+	}
+
+
+	try
+	{
+		gserver->TimerThread();
+	}
+	catch (Poco::Data::MySQL::MySQLException * e)
+	{
+		gserver->consoleLogger->fatal(Poco::format("TimerThread() SQL Exception: %s", e->displayText()));
+	}
+	catch (...)
+	{
+		gserver->consoleLogger->fatal("Unspecified TimerThread() Exception.");
+	}
+
+
+	gserver->consoleLogger->information("Shutting down");
+
+	//does this need a thread join here?
+
+	gserver->stop_all();
+	delete gserver;
+	printf("Exiting...\n");
 	return 0;
 }
 
+
+#ifndef WIN32
+void sigfunc(int sig_no)
+{
+	printf("Signal received: %d\n", sig_no);
+	//	if (sig_no == SIGSEGV)
+	//	{
+	//		Log("Seg fault onoes!");
+	//	}
+	/*else*/ if (sig_no == SIGINT)
+	{
+		printf("Interrupt request\n");
+		gserver->Shutdown();
+		//LoginServer->serverrunning = false;
+	}
+	else if (sig_no == SIGHUP)
+	{
+		printf("Rehash Signal\n");
+	}
+	else if (sig_no == SIGUSR1)
+	{
+		printf("user1 Signal\n");
+	}
+	else if (sig_no == SIGUSR2)
+	{
+		printf("user2 Signal\n");
+	}
+}
+#else
+BOOL WINAPI ConsoleHandler(DWORD CEvent)
+{
+	char mesg[128];
+
+	switch (CEvent)
+	{
+		case CTRL_C_EVENT:
+			// 		MessageBox(NULL,
+			// 			_T("CTRL+C received!"),_T("CEvent"),MB_OK);
+			gserver->Shutdown();
+			break;
+		case CTRL_BREAK_EVENT:
+			// 		MessageBox(NULL,
+			// 			_T("CTRL+BREAK received!"),_T("CEvent"),MB_OK);
+			gserver->Shutdown();
+			break;
+		case CTRL_CLOSE_EVENT:
+			// 		MessageBox(NULL,
+			// 			_T("Program being closed!"),_T("CEvent"),MB_OK);
+			gserver->Shutdown();
+			break;
+		case CTRL_LOGOFF_EVENT:
+			// 		MessageBox(NULL,
+			// 			_T("User is logging off!"),_T("CEvent"),MB_OK);
+			gserver->Shutdown();
+			break;
+		case CTRL_SHUTDOWN_EVENT:
+			// 		MessageBox(NULL,
+			// 			_T("User is logging off!"),_T("CEvent"),MB_OK);
+			gserver->Shutdown();
+			break;
+
+	}
+	return TRUE;
+}
+#endif
