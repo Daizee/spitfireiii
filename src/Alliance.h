@@ -58,6 +58,7 @@ public:
 	amf3object ToObject();
 
 	bool SaveToDB();
+	bool InsertToDB();
 
 	bool HasMember(string username);
 	bool HasMember(uint64_t clientid);

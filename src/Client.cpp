@@ -72,6 +72,7 @@ Client::Client(Server * core)
 	m_creation = 0;
 	m_sex = 0;
 	m_allianceid = -1;
+	m_alliancerank = 0;
 	m_currentcityindex = -1;
 	m_currentcityid = -1;
 	m_population = 0;

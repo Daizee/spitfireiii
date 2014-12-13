@@ -838,6 +838,20 @@ void Server::run()
 		}
 	}
 
+	consoleLogger->information("Validating players.");
+
+
+	for (Client * player : players)
+	{
+		if (player->GetAlliance() == (Alliance*)-1)
+		{
+			player->m_allianceid = -1;
+			player->m_alliancerank = 0;
+			player->m_alliancename = "";
+		}
+	}
+
+
 
 	consoleLogger->information("Incrementing valleys.");
 

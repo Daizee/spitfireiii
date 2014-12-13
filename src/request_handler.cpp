@@ -1887,6 +1887,21 @@ void request_handler::handle_request(request& req, reply& rep)
 #pragma region alliance
 		if ((cmdtype == "alliance"))
 		{
+			if ((command == "sayByetoAlliance"))
+			{
+				if (client->HasAlliance())
+				{
+					Alliance * alliance = client->GetAlliance();
+					alliance->RemoveMember(client->m_accountid);
+					alliance->SendAllianceMessage(client->m_playername + " has left the alliance", false, true);
+					client->m_allianceid = -1;
+					client->m_alliancename = "";
+					client->m_alliancerank = 0;
+					client->m_allianceapply = "";
+					client->m_allianceapplytime = 0;
+				}
+				return;
+			}
 			if ((command == "isHasAlliance"))
 			{
 				obj2["cmd"] = "alliance.isHasAlliance";

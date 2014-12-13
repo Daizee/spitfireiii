@@ -58,18 +58,105 @@ Alliance::~Alliance()
 
 }
 
-bool Alliance::SaveToDB()
+bool Alliance::InsertToDB()
 {
-	typedef Poco::Tuple<string> AllianceSave;
+	typedef Poco::Tuple<string, string, string> AllianceSave;
+	//name, founder, leader
 
-
-	AllianceSave savedata(m_name);
-
+	AllianceSave savedata(m_name, m_founder, m_owner);
 
 	try
 	{
 		Session ses(m_main->serverpool->get());
-		ses << "UPDATE `accounts` SET buffs=?,`research`=?,items=?,misc=?,`status`=?,ipaddress=?,sex=?,flag=?,faceurl=?,allianceid=?,alliancerank=?,cents=?,prestige=?,honor=?,lastlogin=?,changedface=?,icon=?,allianceapply=?,allianceapplytime=? WHERE accountid=?;", use(savedata), now;
+		ses << "INSERT INTO `alliances` (name,founder,leader) VALUES (?,?,?) WHERE id=?;", use(savedata), now;
+
+		Statement lastinsert = (ses << "SELECT LAST_INSERT_ID()");
+		lastinsert.execute();
+		RecordSet lsi(lastinsert);
+		lsi.moveFirst();
+		int64_t lsiv = lsi.value("LAST_INSERT_ID()").convert<int64_t>();
+		if (lsiv > 0)
+		{
+			m_allianceid = lsiv;
+		}
+		else
+		{
+			m_main->consoleLogger->information("Unable to create account.");
+			return false;
+		}
+
+		return true;
+	}
+	catch (Poco::Data::MySQL::ConnectionException& e)\
+	{
+		m_main->consoleLogger->error(Poco::format("ConnectionException: %s", e.displayText()));
+	}
+	catch (Poco::Data::MySQL::StatementException& e)
+	{
+		m_main->consoleLogger->error(Poco::format("StatementException: %s", e.displayText()));
+	}
+	catch (Poco::Data::MySQL::MySQLException& e)
+	{
+		m_main->consoleLogger->error(Poco::format("MySQLException: %s", e.displayText()));
+	}
+	catch (Poco::InvalidArgumentException& e)
+	{
+		m_main->consoleLogger->error(Poco::format("InvalidArgumentException: %s", e.displayText()));
+	}
+	return false;
+}
+
+bool Alliance::SaveToDB()
+{
+	typedef Poco::Tuple<string, string, string, string, string, string, string, string, string, string> AllianceSave;
+	//name, founder, leader, note, intro, motd, allies, neutrals, enemies, members
+
+
+	std::vector<Poco::Any> args;
+	std::stringstream ss;
+
+	string allies = "";
+	string neutrals = "";
+	string enemies = "";
+	string members = "";
+
+	for (int64_t id : m_allies)
+	{
+		args.push_back(id);
+		ss << "%?d|";
+	}
+	Poco::format(allies, ss.str(), args);
+
+	for (int64_t id : m_neutral)
+	{
+		args.push_back(id);
+		ss << "%?d|";
+	}
+	Poco::format(neutrals, ss.str(), args);
+
+	for (int64_t id : m_enemies)
+	{
+		args.push_back(id);
+		ss << "%?d|";
+	}
+	Poco::format(enemies, ss.str(), args);
+
+	for (stMember & member: m_members)
+	{
+		args.push_back(member.clientid);
+		args.push_back(member.rank);
+		ss << "%?d,%?d|";
+	}
+	Poco::format(members, ss.str(), args);
+
+	AllianceSave savedata(m_name, m_founder, m_owner, m_note, m_intro, m_motd, allies, neutrals, enemies, members);
+
+
+	//name, founder, leader, note, intro, motd, allies, neutrals, enemies, members
+	try
+	{
+		Session ses(m_main->serverpool->get());
+		ses << "UPDATE `alliances` SET name=?,founder=?,leader=?,note=?,intro=?,motd=?,allies=?,neutrals=?,enemies=?,members=? WHERE id=?;", use(savedata), use(m_allianceid), now;
 		return true;
 	}
 	catch (Poco::Data::MySQL::ConnectionException& e)\
@@ -231,30 +318,23 @@ void Alliance::ParseMembers(string str)
 {
 	if (str.length() > 0)
 	{
-		char * str2 = new char[str.length()+1];
-		memset(str2, 0, str.length()+1);
-		memcpy(str2, str.c_str(), str.length());
-
 		uint32_t clientid;
 		uint8_t rank;
 
-		char * ch = 0, * cr = 0;
-		char * tok;
-		tok = strtok_s(str2, "|", &ch);
-		do
+		std::vector<string> outertokens;
+		std::vector<string> tokens;
+		boost::split(outertokens, str, boost::is_any_of("|"));
+
+		for (string token : outertokens)
 		{
-			tok = strtok_s(tok, ",", &cr);
-			if (tok != 0)
-				clientid = atoi(tok);
-			tok = strtok_s(0, ",", &cr);
-			if (tok != 0)
-				rank = atoi(tok);
-
-			AddMember(clientid, rank);
-			tok = strtok_s(0, "|", &ch);
-		} while (tok != 0);
-
-		delete[] str2;
+			boost::split(tokens, token, boost::is_any_of(","));
+			if (tokens.size() == 2)
+			{
+				clientid = atoi(tokens[0].c_str());
+				rank = atoi(tokens[1].c_str());
+				AddMember(clientid, rank);
+			}
+		}
 	}
 }
 
@@ -262,27 +342,16 @@ void Alliance::ParseRelation(std::vector<int64_t> * list, string str)
 {
 	if (str.length() > 0)
 	{
-		char * str2 = new char[str.length()+1];
-		memset(str2, 0, str.length()+1);
-		memcpy(str2, str.c_str(), str.length());
-
 		uint64_t allianceid;
 
-		char * ch = 0, * cr = 0;
-		char * tok;
-		tok = strtok_s(str2, "|", &ch);
-		do
+		std::vector<string> tokens;
+		boost::split(tokens, str, boost::is_any_of("|"));
+
+		for (string token : tokens)
 		{
-			tok = strtok_s(tok, ",", &cr);
-			if (tok != 0)
-				allianceid = atoi(tok);
-
+			allianceid = atoi(token.c_str());
 			list->push_back(allianceid);
-
-			tok = strtok_s(0, "|", &ch);
-		} while (tok != 0);
-
-		delete[] str2;
+		}
 	}
 }
 
