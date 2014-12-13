@@ -96,19 +96,21 @@ public:
 
 	/// Acceptor used to listen for incoming connections.
 	boost::asio::ip::tcp::acceptor acceptor_;
-	boost::asio::ip::tcp::acceptor acceptorpolicy_;
 
 	/// The connection list which owns all live connections.
 	std::set<connection_ptr> connections_;
 
 	/// The next socket to be accepted.
 	boost::asio::ip::tcp::socket socket_;
-	boost::asio::ip::tcp::socket socketpolicy_;
 
 	/// The handler for all incoming requests.
 	request_handler request_handler_;
-	request_handler request_handlerpolicy_;
 
+#ifdef WIN32
+	boost::asio::ip::tcp::acceptor acceptorpolicy_;
+	boost::asio::ip::tcp::socket socketpolicy_;
+	request_handler request_handlerpolicy_;
+#endif
 
 	uint32_t serverstatus;
 
