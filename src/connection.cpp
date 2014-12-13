@@ -119,10 +119,11 @@ void connection::handle_read_header(const boost::system::error_code& e,
 			size = *(int32_t*)buffer_.data();
 			ByteSwap(size);
 
-			if ((size <= 4) || (size >= MAXPACKETSIZE))
+			if ((size < 4) || (size >= MAXPACKETSIZE))
 			{
 				this->client_->m_main->consoleLogger->information(Poco::format("Did not receive proper amount of bytes : sent: %?d - ip:%s", size, this->client_->m_ipaddress));
 				server.stop(shared_from_this());
+				return;
 			}
 
 			boost::asio::async_read(socket_, boost::asio::buffer(buffer_, size), boost::bind(&connection::handle_read, shared_from_this(),
