@@ -35,9 +35,9 @@
 #include <time.h>
 #include <signal.h>
 #include <thread>
-#ifndef WIN32
 #include <lua5.2/lua.hpp>
 #include <lua5.2/lauxlib.h>
+#ifndef WIN32
 #include <pthread.h>
 #include <arpa/inet.h>
 #include <dirent.h>
@@ -57,8 +57,6 @@
 #define WIN32_LEAN_AND_MEAN   
 #include <windows.h>
 #include <tchar.h>
-#include <lua5.2/lua.hpp>
-#include <lua5.2/lauxlib.h>
 #include <intrin.h>
 #endif
 #include <assert.h>

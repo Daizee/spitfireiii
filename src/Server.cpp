@@ -44,7 +44,8 @@ Server::Server()
 	acceptor_(io_service_),
 	socket_(io_service_),
 	map(0),
-	currentplayersonline(0)
+	currentplayersonline(0),
+	request_handler_(this)
 {
 	pFCConsole = new FormattingChannel(new PatternFormatter("%p: %t"));
 	pFCConsole->setChannel(new ConsoleChannel);

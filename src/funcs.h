@@ -285,18 +285,7 @@ extern int asprintf(char **str, const char *fmt, ...);
 #define IsString(x) (x.type==String)
 #define IsObject(x) (x.type==Object)
 
-#define CHECKCASTLEID() \
-	if (IsObject(data) && KeyExists(data, "castleId") && (int)data["castleId"] != client->m_currentcityid) \
-		{ \
-	gserver->consoleLogger->information(Poco::format("castleId does not match castle focus! gave: %d is:%d - cmd: %s - accountid:%d - playername: %s", (int)data["castleId"], client->m_currentcityid, cmd.c_str(), client->m_accountid, (char*)client->m_playername.c_str())); \
-		}
 
-#define VERIFYCASTLEID() \
-	if (!IsObject(data) || !KeyExists(data, "castleId") ) \
-		{ \
-	gserver->consoleLogger->information("castleId not received!"); \
-	return; \
-		}
 
 
 

@@ -32,6 +32,7 @@
 
 struct reply;
 struct request;
+class Server;
 
 /// The common handler for all incoming requests.
 class request_handler
@@ -40,11 +41,12 @@ class request_handler
 	request_handler& operator=(const request_handler&) = delete;
 
 public:
-	/// Construct with a directory containing files to be served.
-	explicit request_handler();
+	explicit request_handler(Server * server);
 
 	/// Handle a request and produce a reply.
 	void handle_request(request& req, reply& rep);
+
+	Server * gserver;
 };
 
 #endif // HTTP_REQUEST_HANDLER_HPP

@@ -2,7 +2,7 @@
 // AllianceCore.h
 // Project Spitfire
 //
-// Copyright (c) 2013 Daizee (rensiadz at gmail dot com)
+// Copyright (c) 2014 Daizee (rensiadz at gmail dot com)
 //
 // This file is part of Spitfire.
 // 
@@ -98,11 +98,11 @@ public:
 	// 	};
 
 	void SortAlliances();
-	bool JoinAlliance(uint32_t allianceid, Client * client);
-	bool RemoveFromAlliance(uint32_t allianceid, Client * client);
-	bool SetRank(uint32_t allianceid, Client * client, int8_t rank);
+	bool JoinAlliance(uint64_t allianceid, Client * client);
+	bool RemoveFromAlliance(uint64_t allianceid, Client * client);
+	bool SetRank(uint64_t allianceid, Client * client, int8_t rank);
 
-	Alliance * AllianceById(uint32_t id);
+	Alliance * AllianceById(uint64_t id);
 	Alliance * AllianceByName(string name);
 
 	Server * m_main;

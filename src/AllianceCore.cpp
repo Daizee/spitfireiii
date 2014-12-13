@@ -2,7 +2,7 @@
 // AllianceCore.cpp
 // Project Spitfire
 //
-// Copyright (c) 2013 Daizee (rensiadz at gmail dot com)
+// Copyright (c) 2014 Daizee (rensiadz at gmail dot com)
 //
 // This file is part of Spitfire.
 // 
@@ -104,7 +104,7 @@ Alliance * AllianceCore::CreateAlliance(string name, int64_t ownerid, int64_t al
 	return 0;
 }
 
-bool AllianceCore::JoinAlliance(uint32_t allianceid, Client * client)
+bool AllianceCore::JoinAlliance(uint64_t allianceid, Client * client)
 {
 	if (client->m_allianceid > 0)
 	{
@@ -128,7 +128,7 @@ bool AllianceCore::JoinAlliance(uint32_t allianceid, Client * client)
 	return false;
 }
 
-bool AllianceCore::RemoveFromAlliance(uint32_t allianceid, Client * client)
+bool AllianceCore::RemoveFromAlliance(uint64_t allianceid, Client * client)
 {
 	if (client->m_allianceid <= 0)
 	{
@@ -150,7 +150,7 @@ bool AllianceCore::RemoveFromAlliance(uint32_t allianceid, Client * client)
 	return true;
 }
 
-bool AllianceCore::SetRank(uint32_t allianceid, Client * client, int8_t rank)
+bool AllianceCore::SetRank(uint64_t allianceid, Client * client, int8_t rank)
 {
 	if (client->m_allianceid <= 0)
 	{
@@ -334,7 +334,7 @@ void AllianceCore::SortAlliances()
 	m_main->mtxlist.alliance.unlock_shared();
 }
 
-Alliance * AllianceCore::AllianceById(uint32_t id)
+Alliance * AllianceCore::AllianceById(uint64_t id)
 {
 	for (int i = 0; i < DEF_MAXALLIANCES; ++i)
 	{

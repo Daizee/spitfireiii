@@ -2,7 +2,7 @@
 // Tile.cpp
 // Project Spitfire
 //
-// Copyright (c) 2013 Daizee (rensiadz at gmail dot com)
+// Copyright (c) 2014 Daizee (rensiadz at gmail dot com)
 //
 // This file is part of Spitfire.
 // 
