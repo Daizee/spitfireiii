@@ -55,6 +55,7 @@ public:
 
 	/// Start the first asynchronous operation for the connection.
 	void start();
+	void startpolicy();
 
 	/// Stop all asynchronous operations associated with the connection.
 	void stop();
@@ -63,6 +64,8 @@ public:
 
 private:
 	/// Handle completion of a read operation.
+	void handle_read_policy(const boost::system::error_code& e,
+							std::size_t bytes_transferred);
 	void handle_read_header(const boost::system::error_code& e,
 							std::size_t bytes_transferred);
 	void handle_read(const boost::system::error_code& e,

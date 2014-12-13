@@ -94,6 +94,12 @@
     <ClInclude Include="src\structs.h" />
     <ClInclude Include="src\Tile.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bin\config.lua" />
+    <None Include="configure.ac" />
+    <None Include="Makefile.am" />
+    <None Include="README.md" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A73B15B1-84CA-4EA2-95AF-50B6E6D2DD17}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

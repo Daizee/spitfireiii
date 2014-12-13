@@ -77,6 +77,7 @@ public:
 
 	/// Start the first asynchronous operation for the connection.
 	void start(connection_ptr c);
+	void startpolicy(connection_ptr c);
 
 	/// Stop the specified connection.
 	void stop(connection_ptr c);
@@ -85,6 +86,7 @@ public:
 	void stop_all();
 
 	void do_accept();
+	void do_acceptpolicy();
 
 	/// The io_service used to perform asynchronous operations.
 	boost::asio::io_service io_service_;
@@ -94,15 +96,18 @@ public:
 
 	/// Acceptor used to listen for incoming connections.
 	boost::asio::ip::tcp::acceptor acceptor_;
+	boost::asio::ip::tcp::acceptor acceptorpolicy_;
 
 	/// The connection list which owns all live connections.
 	std::set<connection_ptr> connections_;
 
 	/// The next socket to be accepted.
 	boost::asio::ip::tcp::socket socket_;
+	boost::asio::ip::tcp::socket socketpolicy_;
 
 	/// The handler for all incoming requests.
 	request_handler request_handler_;
+	request_handler request_handlerpolicy_;
 
 
 	uint32_t serverstatus;

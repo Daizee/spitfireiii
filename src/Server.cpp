@@ -46,6 +46,11 @@ Server::Server()
 	map(0),
 	currentplayersonline(0),
 	request_handler_(this)
+#ifdef WIN32
+	,acceptorpolicy_(io_service_),
+	socketpolicy_(io_service_),
+	request_handlerpolicy_(this)
+#endif
 {
 	pFCConsole = new FormattingChannel(new PatternFormatter("%p: %t"));
 	pFCConsole->setChannel(new ConsoleChannel);
@@ -930,6 +935,16 @@ void Server::start(connection_ptr c)
 	c->start();
 }
 
+void Server::startpolicy(connection_ptr c)
+{
+	boost::asio::ip::tcp::endpoint endp = c->socket().remote_endpoint();
+	boost::asio::ip::address address = endp.address();
+	c->address = address.to_string();
+	consoleLogger->information(Poco::format("Policy Client connected %s", c->address));
+
+	c->startpolicy();
+}
+
 void Server::stop(connection_ptr c)
 {
 	try
@@ -1109,6 +1124,30 @@ bool Server::ConnectSQL()
 
 bool Server::InitSockets()
 {
+#ifdef WIN32
+	boost::asio::ip::tcp::resolver resolver(io_service_);
+	boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({ bindaddress, string("843") });
+	acceptorpolicy_.open(endpoint.protocol());
+	acceptorpolicy_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+	bool test = true;
+	try
+	{
+		acceptorpolicy_.bind(endpoint);
+	}
+	catch (std::exception& e)
+	{
+		test = false;
+	}
+	if (test == false)
+	{
+		throw std::runtime_error("Invalid bind address or port 843 already in use! Exiting.");
+	}
+
+	// Finally listen on the socket and start accepting connections
+	acceptorpolicy_.listen();
+	do_acceptpolicy();
+#endif
+
 	// Open the acceptor with the option to reuse the address (i.e. SO_REUSEADDR).
 	boost::asio::ip::tcp::resolver resolver(io_service_);
 	boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({ bindaddress, bindport });
@@ -1152,6 +1191,28 @@ void Server::do_accept()
 		}
 
 		do_accept();
+	});
+}
+
+void Server::do_acceptpolicy()
+{
+	acceptorpolicy_.async_accept(socketpolicy_,
+						   [this](boost::system::error_code ec)
+	{
+		// Check whether the server was stopped by a signal before this
+		// completion handler had a chance to run.
+		if (!acceptor_.is_open())
+		{
+			return;
+		}
+
+		if (!ec)
+		{
+			startpolicy(std::make_shared<connection>(
+				std::move(socketpolicy_), *this, request_handlerpolicy_));
+		}
+
+		do_acceptpolicy();
 	});
 }
 

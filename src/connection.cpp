@@ -61,6 +61,13 @@ void connection::start()
 		boost::asio::placeholders::bytes_transferred));
 }
 
+void connection::startpolicy()
+{
+	boost::asio::async_read(socket_, boost::asio::buffer(buffer_, 4), boost::bind(&connection::handle_read_policy, shared_from_this(),
+		boost::asio::placeholders::error,
+		boost::asio::placeholders::bytes_transferred));
+}
+
 void connection::stop()
 {
 	socket_.close();
@@ -109,6 +116,32 @@ void connection::write(const char * data, const int32_t size)
 	});
 }
 
+void connection::handle_read_policy(const boost::system::error_code& e,
+									std::size_t bytes_transferred)
+{
+	if (!e)
+	{
+		if (bytes_transferred == 4)
+		{
+			if (!memcmp(buffer_.data(), "<c", 2) || !memcmp(buffer_.data(), "<p", 2))
+			{
+				boost::asio::async_write(socket_, boost::asio::buffer("<cross-domain-policy><allow-access-from domain=\"*\" to-ports=\"21-60000\" /></cross-domain-policy>\0"),
+										 boost::bind(&connection::handle_write, shared_from_this(),
+										 boost::asio::placeholders::error));
+				boost::system::error_code ignored_ec;
+				socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
+				server.stop(shared_from_this());
+			}
+		}
+	}
+	else if (e != boost::asio::error::operation_aborted)
+	{
+		server.stop(shared_from_this());
+		return;
+	}
+
+}
+
 void connection::handle_read_header(const boost::system::error_code& e,
 									std::size_t bytes_transferred)
 {
@@ -121,7 +154,7 @@ void connection::handle_read_header(const boost::system::error_code& e,
 
 			if ((size < 4) || (size >= MAXPACKETSIZE))
 			{
-				this->client_->m_main->consoleLogger->information(Poco::format("Did not receive proper amount of bytes : sent: %?d - ip:%s", size, this->client_->m_ipaddress));
+				server.consoleLogger->information(Poco::format("Did not receive proper amount of bytes : sent: %?d - ip:%s", size, address));
 				server.stop(shared_from_this());
 				return;
 			}
