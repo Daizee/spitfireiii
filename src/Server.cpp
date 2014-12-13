@@ -935,6 +935,7 @@ void Server::start(connection_ptr c)
 	c->start();
 }
 
+#ifdef WIN32
 void Server::startpolicy(connection_ptr c)
 {
 	boost::asio::ip::tcp::endpoint endp = c->socket().remote_endpoint();
@@ -944,6 +945,7 @@ void Server::startpolicy(connection_ptr c)
 
 	c->startpolicy();
 }
+#endif
 
 void Server::stop(connection_ptr c)
 {
@@ -1196,6 +1198,7 @@ void Server::do_accept()
 	});
 }
 
+#ifdef WIN32
 void Server::do_acceptpolicy()
 {
 	acceptorpolicy_.async_accept(socketpolicy_,
@@ -1217,7 +1220,7 @@ void Server::do_acceptpolicy()
 		do_acceptpolicy();
 	});
 }
-
+#endif
 // Timers
 
 void Server::TimerThread()
