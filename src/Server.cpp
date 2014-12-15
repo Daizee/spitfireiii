@@ -46,11 +46,11 @@ Server::Server()
 	map(0),
 	currentplayersonline(0),
 	request_handler_(this)
-#ifdef WIN32
+//#ifdef WIN32
 	,acceptorpolicy_(io_service_),
 	socketpolicy_(io_service_),
 	request_handlerpolicy_(this)
-#endif
+//#endif
 {
 	pFCConsole = new FormattingChannel(new PatternFormatter("%p: %t"));
 	pFCConsole->setChannel(new ConsoleChannel);
@@ -935,7 +935,7 @@ void Server::start(connection_ptr c)
 	c->start();
 }
 
-#ifdef WIN32
+//#ifdef WIN32
 void Server::startpolicy(connection_ptr c)
 {
 	boost::asio::ip::tcp::endpoint endp = c->socket().remote_endpoint();
@@ -945,7 +945,7 @@ void Server::startpolicy(connection_ptr c)
 
 	c->startpolicy();
 }
-#endif
+//#endif
 
 void Server::stop(connection_ptr c)
 {
@@ -1126,7 +1126,7 @@ bool Server::ConnectSQL()
 
 bool Server::InitSockets()
 {
-#ifdef WIN32
+//#ifdef WIN32
 	{
 		boost::asio::ip::tcp::resolver resolver(io_service_);
 		boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({ bindaddress, string("843") });
@@ -1150,7 +1150,7 @@ bool Server::InitSockets()
 		acceptorpolicy_.listen();
 		do_acceptpolicy();
 	}
-#endif
+//#endif
 
 	// Open the acceptor with the option to reuse the address (i.e. SO_REUSEADDR).
 	boost::asio::ip::tcp::resolver resolver(io_service_);
