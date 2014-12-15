@@ -1198,7 +1198,7 @@ void Server::do_accept()
 	});
 }
 
-#ifdef WIN32
+//#ifdef WIN32
 void Server::do_acceptpolicy()
 {
 	acceptorpolicy_.async_accept(socketpolicy_,
@@ -1220,7 +1220,7 @@ void Server::do_acceptpolicy()
 		do_acceptpolicy();
 	});
 }
-#endif
+//#endif
 // Timers
 
 void Server::TimerThread()
