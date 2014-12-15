@@ -1143,12 +1143,14 @@ bool Server::InitSockets()
 		}
 		if (test == false)
 		{
-			throw std::runtime_error("Invalid bind address or port 843 already in use! Exiting.");
+			printf("Invalid bind address or port 843 already in use!");
 		}
-
-		// Finally listen on the socket and start accepting connections
-		acceptorpolicy_.listen();
-		do_acceptpolicy();
+		else
+		{
+			// Finally listen on the socket and start accepting connections
+			acceptorpolicy_.listen();
+			do_acceptpolicy();
+		}
 	}
 //#endif
 
