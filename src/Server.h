@@ -106,11 +106,11 @@ public:
 	/// The handler for all incoming requests.
 	request_handler request_handler_;
 
-#ifdef WIN32
+//#ifdef WIN32
 	boost::asio::ip::tcp::acceptor acceptorpolicy_;
 	boost::asio::ip::tcp::socket socketpolicy_;
 	request_handler request_handlerpolicy_;
-#endif
+//#endif
 
 	uint32_t serverstatus;
 
