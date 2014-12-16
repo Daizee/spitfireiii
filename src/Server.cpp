@@ -1143,7 +1143,7 @@ bool Server::InitSockets()
 		}
 		if (test == false)
 		{
-			printf("Invalid bind address or port 843 already in use!");
+			printf("Invalid bind address or port 843 already in use!\n");
 		}
 		else
 		{

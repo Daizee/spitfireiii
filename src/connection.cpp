@@ -56,14 +56,14 @@ void connection::start()
 	srand(unixtime());
 	server.PlayerCount(1);
 
-	boost::asio::async_read(socket_, boost::asio::buffer(buffer_, 5), boost::bind(&connection::handle_read_header, shared_from_this(),
+	boost::asio::async_read(socket_, boost::asio::buffer(buffer_, 4), boost::bind(&connection::handle_read_header, shared_from_this(),
 		boost::asio::placeholders::error,
 		boost::asio::placeholders::bytes_transferred));
 }
 
 void connection::startpolicy()
 {
-	boost::asio::async_read(socket_, boost::asio::buffer(buffer_), boost::bind(&connection::handle_read_policy, shared_from_this(),
+	boost::asio::async_read(socket_, boost::asio::buffer(buffer_, 22), boost::bind(&connection::handle_read_policy, shared_from_this(),
 		boost::asio::placeholders::error,
 		boost::asio::placeholders::bytes_transferred));
 }
@@ -121,34 +121,10 @@ void connection::handle_read_policy(const boost::system::error_code& e,
 {
 	if (bytes_transferred)
 	{
-		if (!strcmp(buffer_.data(), "<policy-file-request/>"))
+		if (!memcmp(buffer_.data(), "<policy-file-request/>", 22))
 		{
 			auto self(shared_from_this());
-			boost::asio::async_write(socket_, boost::asio::buffer("<?xml version=\"1.0\"?>\
-<!DOCTYPE cross-domain-policy SYSTEM \"/xml/dtds/cross-domain-policy.dtd\">\
-\
-<!-- Policy file for xmlsocket://socks.example.com -->\
-<cross-domain-policy> \
-\
-<!-- This is a master socket policy file -->\
-<!-- No other socket policies on the host will be permitted -->\
-<!-- <site-control permitted-cross-domain-policies=\"master-only\"/> -->\
-\
-<!-- Instead of setting to-ports=\"*\", administrator's can use ranges and commas -->\
-<!-- This will allow access to ports 123, 456, 457 and 458 -->\
-<allow-access-from domain=\"*\" to-ports=\"20-60000\" />\
-\
-</cross-domain-policy>\
-\
-\
-\
-				"),
-				[this, self](boost::system::error_code ec, std::size_t written)
-			{
-				boost::system::error_code ignored_ec;
-				socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
-				server.stop(shared_from_this());
-			});
+			write("<?xml version=\"1.0\"?><!DOCTYPE cross-domain-policy SYSTEM \"/xml/dtds/cross-domain-policy.dtd\"><cross-domain-policy><site-control permitted-cross-domain-policies=\"master-only\"/><allow-access-from domain=\"*\" to-ports=\"*\" /></cross-domain-policy>\n\n\0", 246);
 		}
 	}
 	else if (e != boost::asio::error::operation_aborted)
@@ -164,18 +140,12 @@ void connection::handle_read_header(const boost::system::error_code& e,
 {
 	if (!e)
 	{
-		if (bytes_transferred == 5)
+		if (bytes_transferred == 4)
 		{
-			if (*(int8_t*)buffer_.data() != 0x08)
-			{
-				server.consoleLogger->information(Poco::format("Not an AMF3 object - ip:%s", address));
-				server.stop(shared_from_this());
-				return;
-			}
 			size = *(int32_t*)buffer_.data();
 			ByteSwap(size);
 
-			if ((size < 5) || (size >= MAXPACKETSIZE))
+			if ((size < 4) || (size >= MAXPACKETSIZE))
 			{
 				server.consoleLogger->information(Poco::format("Did not receive proper amount of bytes : sent: %?d - ip:%s", size, address));
 				server.stop(shared_from_this());
@@ -203,6 +173,13 @@ void connection::handle_read(const boost::system::error_code& e,
 		if (bytes_transferred != size)
 		{
 			this->client_->m_main->consoleLogger->information(Poco::format("Did not receive proper amount of bytes : rcv: %?d needed: %?d", bytes_transferred, size));
+			server.stop(shared_from_this());
+			return;
+		}
+		char * t = buffer_.data();
+		if ((*(int8_t*)t != 0x0a) && (*(int8_t*)(t+1) != 0x0b) && (*(int8_t*)(t+2) != 0x01))
+		{
+			server.consoleLogger->information(Poco::format("Not an AMF3 object - ip:%s", address));
 			server.stop(shared_from_this());
 			return;
 		}
@@ -263,7 +240,7 @@ void connection::handle_read(const boost::system::error_code& e,
 		// 			reply_.objects.clear();
 		// 		}
 
-		boost::asio::async_read(socket_, boost::asio::buffer(buffer_, 5), boost::bind(&connection::handle_read_header, shared_from_this(),
+		boost::asio::async_read(socket_, boost::asio::buffer(buffer_, 4), boost::bind(&connection::handle_read_header, shared_from_this(),
 			boost::asio::placeholders::error,
 			boost::asio::placeholders::bytes_transferred));
 	}
