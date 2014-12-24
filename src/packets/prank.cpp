@@ -43,6 +43,9 @@ prank::~prank()
 
 void prank::process()
 {
+	obj2["data"] = amf3object();
+	amf3object & data2 = obj2["data"];
+
 	if ((command == "getPlayerRank"))
 	{
 		int pagesize = data["pageSize"];

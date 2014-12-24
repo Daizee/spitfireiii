@@ -133,107 +133,107 @@ void request_handler::handle_request(request& req, reply& rep)
 			pcommon pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "report")
+		else if (cmdtype == "report")
 		{
 			preport pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "server")
+		else if (cmdtype == "server")
 		{
 			pserver pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "castle")
+		else if (cmdtype == "castle")
 		{
 			pcastle pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "field")
+		else if (cmdtype == "field")
 		{
 			pfield pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "quest")
+		else if (cmdtype == "quest")
 		{
 			pquest pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "alliance")
+		else if (cmdtype == "alliance")
 		{
 			palliance pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "tech")
+		else if (cmdtype == "tech")
 		{
 			ptech pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "login")
+		else if (cmdtype == "login")
 		{
 			plogin pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "rank")
+		else if (cmdtype == "rank")
 		{
 			prank pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "trade")
+		else if (cmdtype == "trade")
 		{
 			ptrade pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "shop")
+		else if (cmdtype == "shop")
 		{
 			pshop pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "mail")
+		else if (cmdtype == "mail")
 		{
 			pmail pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "fortifications")
+		else if (cmdtype == "fortifications")
 		{
 			pfortifications pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "troop")
+		else if (cmdtype == "troop")
 		{
 			ptroop pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "interior")
+		else if (cmdtype == "interior")
 		{
 			pinterior pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "hero")
+		else if (cmdtype == "hero")
 		{
 			phero pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "friend")
+		else if (cmdtype == "friend")
 		{
 			pfriend pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "city")
+		else if (cmdtype == "city")
 		{
 			pcity pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "furlough")
+		else if (cmdtype == "furlough")
 		{
 			pfurlough pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "army")
+		else if (cmdtype == "army")
 		{
 			parmy pkt(gserver, req, obj);
 			pkt.process();
 		}
-		if (cmdtype == "gameclient")
+		else if(cmdtype == "gameClient")
 		{
 			pgameclient pkt(gserver, req, obj);
 			pkt.process();

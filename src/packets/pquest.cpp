@@ -40,6 +40,9 @@ pquest::~pquest()
 
 void pquest::process()
 {
+	obj2["data"] = amf3object();
+	amf3object & data2 = obj2["data"];
+
 	if (command == "getQuestType") //quest info requested every 3 mins
 	{
 		VERIFYCASTLEID();

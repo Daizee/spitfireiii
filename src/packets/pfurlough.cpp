@@ -41,6 +41,9 @@ pfurlough::~pfurlough()
 
 void pfurlough::process()
 {
+	obj2["data"] = amf3object();
+	amf3object & data2 = obj2["data"];
+
 	if ((command == "isFurlought"))
 	{
 		int32_t playerid = data["playerId"];

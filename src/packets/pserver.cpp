@@ -39,6 +39,9 @@ pserver::~pserver()
 
 void pserver::process()
 {
+	obj2["data"] = amf3object();
+	amf3object & data2 = obj2["data"];
+
 
 #pragma region server
 	// 	if ((cmdtype == "server"))

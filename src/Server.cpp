@@ -1127,31 +1127,31 @@ bool Server::ConnectSQL()
 bool Server::InitSockets()
 {
 //#ifdef WIN32
-	{
-		boost::asio::ip::tcp::resolver resolver(io_service_);
-		boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({ bindaddress, string("843") });
-		acceptorpolicy_.open(endpoint.protocol());
-		acceptorpolicy_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
-		bool test = true;
-		try
-		{
-			acceptorpolicy_.bind(endpoint);
-		}
-		catch (std::exception& e)
-		{
-			test = false;
-		}
-		if (test == false)
-		{
-			printf("Invalid bind address or port 843 already in use!\n");
-		}
-		else
-		{
-			// Finally listen on the socket and start accepting connections
-			acceptorpolicy_.listen();
-			do_acceptpolicy();
-		}
-	}
+// 	{
+// 		boost::asio::ip::tcp::resolver resolver(io_service_);
+// 		boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({ bindaddress, string("843") });
+// 		acceptorpolicy_.open(endpoint.protocol());
+// 		acceptorpolicy_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+// 		bool test = true;
+// 		try
+// 		{
+// 			acceptorpolicy_.bind(endpoint);
+// 		}
+// 		catch (std::exception& e)
+// 		{
+// 			test = false;
+// 		}
+// 		if (test == false)
+// 		{
+// 			printf("Invalid bind address or port 843 already in use!\n");
+// 		}
+// 		else
+// 		{
+// 			// Finally listen on the socket and start accepting connections
+// 			acceptorpolicy_.listen();
+// 			do_acceptpolicy();
+// 		}
+// 	}
 //#endif
 
 	// Open the acceptor with the option to reuse the address (i.e. SO_REUSEADDR).

@@ -43,6 +43,9 @@ preport::~preport()
 
 void preport::process()
 {
+	obj2["data"] = amf3object();
+	amf3object & data2 = obj2["data"];
+
 	if (command == "deleteReport")
 	{
 		string reportid = data["idStr"];//always string? always a stringed number?

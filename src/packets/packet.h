@@ -48,7 +48,6 @@ public:
 	string command;
 	amf3object & data;
 	amf3object obj2;
-	amf3object & data2;
 	uint64_t timestamp;
 	PlayerCity * city;
 	void CHECKCASTLEID();

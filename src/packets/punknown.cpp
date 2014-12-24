@@ -39,10 +39,10 @@ punknown::~punknown()
 
 void punknown::process()
 {
-	amf3object obj2;
-	obj2["cmd"] = "server.SystemInfoMsg";
 	obj2["data"] = amf3object();
 	amf3object & data2 = obj2["data"];
+
+	obj2["cmd"] = "server.SystemInfoMsg";
 	data2["alliance"] = false;
 	data2["tV"] = false;
 	data2["noSenderSystemInfo"] = false;

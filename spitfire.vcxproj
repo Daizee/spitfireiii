@@ -100,6 +100,9 @@
     <None Include="Makefile.am" />
     <None Include="README.md" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="TODO.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A73B15B1-84CA-4EA2-95AF-50B6E6D2DD17}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

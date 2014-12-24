@@ -34,10 +34,9 @@ packet::packet(Server * server, request & req, amf3object & obj)
 	: req(req),
 	gserver(server),
 	obj(obj),
-	client(req.conn->client_),
+	client(req.conn!=0?req.conn->client_:0),
 	data(obj["data"]),
-	obj2(amf3object()),
-	data2(obj2["data"])
+	obj2(amf3object())
 {
 	string cmd = obj["cmd"];
 	std::vector<string> tokens;
@@ -56,7 +55,6 @@ packet::packet(Server * server, request & req, amf3object & obj)
 	timestamp = unixtime();
 
 	obj2["cmd"] = "";
-	data2 = amf3object();
 
 	city = 0;
 	if (client && client->m_currentcityindex != -1)

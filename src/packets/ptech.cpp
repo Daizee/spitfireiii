@@ -42,6 +42,9 @@ ptech::~ptech()
 
 void ptech::process()
 {
+	obj2["data"] = amf3object();
+	amf3object & data2 = obj2["data"];
+
 	if ((command == "getResearchList"))
 	{
 		VERIFYCASTLEID();

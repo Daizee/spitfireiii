@@ -1,0 +1,26 @@
+
+Need to "fix" amf3object:
+
+amf3object obj = amf3object();
+obj["data"] = amf3object();
+amf3object & data = obj["data"];
+
+obj["anything"] = "a";
+
+causes data to no longer properly reference obj["data"].
+Haven't followed the code to effectively figure out why.
+What this does show is that the shared_ptr system needs
+modification. The objects copy on assignment instead of
+share like intended.
+
+amf3object obj = amf3object();
+amf3object obj2 = amf3object();
+obj["cmd"] = "1";
+obj2["cmd"] = "2";
+
+obj = obj2;
+
+obj != obj2 now. obj is a copy of obj2 and any changes to one
+does not affect the other. The objects should be shared and
+be references to each other internally with shared_ptrs with
+obj having the "original" object.
