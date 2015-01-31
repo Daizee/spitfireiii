@@ -60,15 +60,15 @@ Alliance::~Alliance()
 
 bool Alliance::InsertToDB()
 {
-	typedef Poco::Tuple<string, string, string> AllianceSave;
+	typedef Poco::Tuple<string, string, string, int64_t> AllianceSave;
 	//name, founder, leader
 
-	AllianceSave savedata(m_name, m_founder, m_owner);
+	AllianceSave savedata(m_name, m_founder, m_owner, unixtime());
 
 	try
 	{
 		Session ses(m_main->serverpool->get());
-		ses << "INSERT INTO `alliances` (name,founder,leader) VALUES (?,?,?) WHERE id=?;", use(savedata), now;
+		ses << "INSERT INTO `alliances` (name,founder,leader,created) VALUES (?,?,?,?);", use(savedata), now;
 
 		Statement lastinsert = (ses << "SELECT LAST_INSERT_ID()");
 		lastinsert.execute();
@@ -81,7 +81,7 @@ bool Alliance::InsertToDB()
 		}
 		else
 		{
-			m_main->consoleLogger->information("Unable to create account.");
+			m_main->consoleLogger->information("Unable to create alliance.");
 			return false;
 		}
 
