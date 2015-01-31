@@ -2530,6 +2530,9 @@ bool Server::ParseChat(Client * client, string str)
 			}*/
 			else if (!strcmp(command, "resources"))
 			{
+				stResources res = { 1000000, 1000000, 1000000, 1000000, 1000000 };
+				client->GetFocusCity()->m_resources += res;
+				client->GetFocusCity()->ResourceUpdate();
 			}
 			else if (!strcmp(command, "tempvar"))
 			{

@@ -2,7 +2,7 @@
 // phero.cpp
 // Project Spitfire
 //
-// Copyright (c) 2014 Daizee (rensiadz at gmail dot com)
+// Copyright (c) 2014 ` (rensiadz at gmail dot com)
 //
 // This file is part of Spitfire.
 // 
@@ -193,7 +193,9 @@ void phero::process()
 						city->CalculateResourceStats();
 						city->CalculateStats();
 						city->CalculateResources();
+						gserver->mtxlist.herocreate.lock();
 						city->m_innheroes[i]->m_id = gserver->m_heroid++;
+						gserver->mtxlist.herocreate.unlock();
 						LOCK(M_HEROLIST);
 						city->HeroUpdate(city->m_innheroes[i], 0);
 						city->m_heroes[x] = city->m_innheroes[i];
