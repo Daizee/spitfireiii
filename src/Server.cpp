@@ -723,7 +723,7 @@ void Server::run()
 					consoleLogger->information(Poco::format("Hero id: %d", temphero->m_id));
 					if (temphero->m_id > m_heroid)
 						m_heroid = temphero->m_id + 1;
-					consoleLogger->information(Poco::format("Server Hero Counter: %d", m_heroid);
+					consoleLogger->information(Poco::format("Server Hero Counter: %d", m_heroid));
 				}
 			}
 
