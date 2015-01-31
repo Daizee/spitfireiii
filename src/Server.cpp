@@ -720,14 +720,14 @@ void Server::run()
 					{
 						city->m_mayor = temphero;
 					}
-					consoleLogger->information(Poco::format("Hero id: %d", temphero->m_id));
+					consoleLogger->information(Poco::format("Hero id: %?d", temphero->m_id));
 					if (temphero->m_id > m_heroid)
 						m_heroid = temphero->m_id + 1;
-					consoleLogger->information(Poco::format("Server Hero Counter: %d", m_heroid));
+					consoleLogger->information(Poco::format("Server Hero Counter: %?d", m_heroid));
 				}
 			}
 
-			consoleLogger->information(Poco::format("Server Hero Final Counter: %d", m_heroid));
+			consoleLogger->information(Poco::format("Server Hero Final Counter: %?d", m_heroid));
 
 			if (cityid >= m_cityid)
 				m_cityid = cityid + 1;
