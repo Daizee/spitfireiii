@@ -727,7 +727,7 @@ void Server::run()
 				}
 			}
 
-			consoleLogger->information(Poco::format("Server Hero Final Counter: %d", m_heroid);
+			consoleLogger->information(Poco::format("Server Hero Final Counter: %d", m_heroid));
 
 			if (cityid >= m_cityid)
 				m_cityid = cityid + 1;
