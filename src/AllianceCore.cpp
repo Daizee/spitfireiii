@@ -98,6 +98,7 @@ Alliance * AllianceCore::CreateAlliance(string name, int64_t ownerid, int64_t al
 				m_alliances[i]->m_allianceid = m_main->m_allianceid++;
 			else
 				m_alliances[i]->m_allianceid = allianceid;
+			m_alliances[i]->InsertToDB();
 			return m_alliances[i];
 		}
 	}
