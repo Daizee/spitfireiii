@@ -903,11 +903,24 @@ void Client::MailUpdate()
 	obj["data"] = amf3object();
 	amf3object & data = obj["data"];
 
-	data["count_system"] = 1;
-	data["count"] = 2;
-	data["count_inbox"] = 1;
+	int32_t sysmail = 0;
+	int32_t totalmail = 0;
+	int32_t inboxmail = 0;
 
-	// TODO count mail properly - void Client::MailUpdate()
+	for (stMail mail : m_mail)
+	{
+		if (!mail.isread)
+		{
+			totalmail++;
+			if (mail.type_id == 1)
+				inboxmail++;
+			else if (mail.type_id == 2)
+				sysmail++;
+		}
+	}
+	data["count_system"] = sysmail;
+	data["count"] = totalmail;
+	data["count_inbox"] = inboxmail;
 
 	m_main->SendObject(this, obj);
 

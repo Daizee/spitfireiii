@@ -443,6 +443,20 @@ struct stPackage
 	string claimedtime;
 	std::vector<stItem> items;
 };
+struct stMail
+{
+	string sender;
+	string receiver;
+	string title;
+	string content;
+	int64_t senttime;
+	int64_t receivetime;
+	int64_t mailid;
+	int64_t playerid;
+	int64_t targetid;
+	bool isread;
+	int8_t type_id;
+};
 
 #pragma endregion
 

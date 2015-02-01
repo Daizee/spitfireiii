@@ -392,4 +392,6 @@ public:
 		data["msg"] = message;
 		return obj;
 	}
+
+	bool CreateMail(string sender, string receiver, string subject, string content, int8_t type);
 };

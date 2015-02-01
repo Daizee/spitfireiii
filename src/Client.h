@@ -147,6 +147,7 @@ public:
 
 	std::vector<stPackage> m_packages;
 	std::vector<stBuff> m_buffs;
+	std::vector<stMail> m_mail;
 	stItem m_items[DEF_MAXITEMS];
 	stResearch m_research[25];
 

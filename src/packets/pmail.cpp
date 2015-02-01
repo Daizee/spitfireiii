@@ -50,6 +50,9 @@ void pmail::process()
 		int32_t pagesize = obj["pageSize"];
 		int32_t type = obj["type"];
 
+		//type 1 = normal inbox
+		//type 2 = system
+		//type 3 = sent
 
 		amf3object obj3;
 		obj3["cmd"] = "mail.receiveMailList";
@@ -84,6 +87,12 @@ void pmail::process()
 		string title = data["title"];
 		string content = data["content"];
 
+		if (client->m_playername == username)
+		{
+			gserver->SendObject(client, gserver->CreateError("mail.sendMail", -21, "invalid mailing operation."));
+			return;
+		}
+
 		Client * tclient = gserver->GetClientByName(username);
 		if (!tclient)
 		{
@@ -110,6 +119,18 @@ void pmail::process()
 		data4["count_inbox"] = 0;
 		gserver->SendObject(tclient, obj4);
 		return;
+	}
+	if (command == "reportBug")
+	{
+		string subject = data["subject"];
+		string content = data["content"];
+		int64_t accountid = client->m_accountid;
+		string sender = client->m_playername;
+
+		obj2["cmd"] = "mail.reportBug";
+		data2["errorMsg"] = "success";
+		data2["packageId"] = 0.0f;
+		data2["ok"] = 1;
 	}
 }
 

@@ -2814,3 +2814,38 @@ void Server::AddMarketEntry(stMarketEntry me, int8_t type)
 	}
 }
 
+bool Server::CreateMail(string sender, string receiver, string subject, string content, int8_t type)
+{
+	Client * snd = this->GetClientByName(sender);
+	Client * rcv = this->GetClientByName(receiver);
+
+	if (((snd == nullptr) && (sender != "SYSTEM")) || (rcv == nullptr))
+	{
+		return false;
+	}
+
+	//player id of 0 is SYSTEM
+	int64_t playerid = (sender == "SYSTEM") ? 0 : snd->m_playerid;
+
+	int64_t time = unixtime();
+
+	Session ses(serverpool->get());
+	Statement stmt = (ses << "INSERT INTO `mail` (`ownerid`, `receiveid`, `subject`, `content`, `time`, `sendtime`, `type`, `read`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+					  use(playerid), use(rcv->m_playerid), use(subject), use(content), use(0), use(time), use(type), use(0));
+	stmt.execute();
+	if (!stmt.done())
+	{
+		consoleLogger->information("Unable to send mail.");
+		return false;
+	}
+	Statement lastinsert = (ses << "SELECT LAST_INSERT_ID()");
+	lastinsert.execute();
+	RecordSet lsi(lastinsert);
+	lsi.moveFirst();
+	int32_t lsiv = lsi.value("LAST_INSERT_ID()").convert<int32_t>();
+
+	//rcv
+
+	return true;
+}
+
