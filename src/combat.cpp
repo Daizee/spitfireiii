@@ -37,11 +37,15 @@ combat::combat(Tile * to, stArmyMovement & move)
 	, defhero(0)
 	, tile(to)
 	, m_status(0)
-	, m_type(0)
+	, m_type(move.missiontype)
 {
 	if (to->m_type == NPC)
 	{
 		defhero = ((NpcCity*)(to->m_city))->m_temphero;
+	}
+	else if (to->m_type == CASTLE)
+	{
+		defhero = ((PlayerCity*)(to->m_city))->m_mayor;
 	}
 	atthero = move.hero;
 }
@@ -52,3 +56,7 @@ combat::~combat(void)
 
 }
 
+bool combat::run()
+{
+	return true;
+}

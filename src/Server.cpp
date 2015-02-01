@@ -34,6 +34,7 @@
 #include "Alliance.h"
 #include "City.h"
 #include "Client.h"
+#include "combat.h"
 
 
 #define DEF_NOMAPDATA
@@ -1306,11 +1307,20 @@ void Server::TimerThread()
 				{
 					for (iter = armylist.begin(); iter != armylist.end();)
 					{
-						armylist.erase(iter++);
-						// 						stArmyMovement * am = (stArmyMovement *)iter->data;
-						// 						PlayerCity * fcity = (PlayerCity *)am->city;
-						// 						Client * fclient = am->client;
-						// 						Hero * fhero = am->hero;
+						//armylist.erase(iter++);
+						stArmyMovement * am = (stArmyMovement *)iter->data;
+						PlayerCity * fcity = (PlayerCity *)am->city;
+						Client * fclient = am->client;
+						Hero * fhero = am->hero;
+						Tile * tile = map->GetTileFromID(am->targetfieldid);
+						if (am->reachtime+am->resttime < ltime)
+						{
+							//start combat, deposit resources, reinforce city, etc
+							combat fight(tile, *am);
+							fight.run();
+						}
+
+
 						// 
 						// 						fclient->SelfArmyUpdate();
 						// 

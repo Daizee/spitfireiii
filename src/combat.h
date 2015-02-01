@@ -39,6 +39,8 @@ public:
 	combat(Tile * to, stArmyMovement & move);
 	~combat(void);
 
+	bool run();
+
 	stArmyMovement & movement;
 	Hero * atthero;
 	Hero * defhero;
@@ -49,6 +51,11 @@ public:
 
 	stTroops defenders;
 	stTroops attackers;
+
+	stTroops enddefenders;
+	stTroops endattackers;
+
+	stTroops resources;
 };
 
 
