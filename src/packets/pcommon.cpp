@@ -588,6 +588,26 @@ void pcommon::process()
 	if (command == "setSecurityCode")
 	{
 		string code = data["code"];
+		return;
+	}
+	if (command == "deleteUserAndRestart")
+	{
+		string pwd = data["pwd"];
+		data2["packageId"] = 0.0f;
+		data2["ok"] = 0;
+
+
+		//call delete stuff
+		//EnemyArmysUpdate;//send enemy armies back 
+		//FriendArmysUpdate;//send reinforced alliance armies back
+		//SelfArmysUpdate;//notify any enemies of army removal
+		//NewMail;//clear mail
+		//NewReport;//clear reports
+
+		obj["cmd"] = "common.deleteUserAndRestart";
+
+		gserver->SendObject(client, obj2);//return command success ( sends back to login screen )
+		return;
 	}
 }
 
