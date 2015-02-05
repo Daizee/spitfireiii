@@ -1358,7 +1358,7 @@ void Server::TimerThread()
 								bldg->level++;
 								ba->city->SetBuilding(bldg->type, bldg->level, ba->positionid, 0, 0.0, 0.0);
 
-								if (bldg->type == 21)
+								if (bldg->type == B_INN)
 								{
 									for (int i = 0; i < 10; ++i)
 									{
@@ -1367,6 +1367,18 @@ void Server::TimerThread()
 											delete city->m_innheroes[i];
 											city->m_innheroes[i] = 0;
 										}
+									}
+								}
+								if (bldg->type == B_TOWNHALL)
+								{
+									if (bldg->level == 5)
+									{
+										//beginner protection removed
+										client->Beginner(false);
+										//title- Beginner's Protection Expired
+										//content- Dear player,
+										//This letter is dedicated to inform you that the Beginner's Protection is expired (7 days protection period was due or Town Hall has been upgraded to level 5). Now you are formally joining the battlefields of Evony. This is a competitive world. You never know when your enemies will come to your city gate. Therefore countermeasures must be made to secure your realm. It's recommended that you upgrade the Walls and build more fortified units, making it a great cost to those who lay their eyes upon your territory.In initial phase, your troops are far from enough to edge out the rivals, therefore you are also advised to build more Warehouses to preserve the resources from plundering.
+										//Hang in there and stay alert.Good luck!
 									}
 								}
 

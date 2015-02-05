@@ -470,6 +470,21 @@ void pshop::ShopUseGoods(amf3object & data, Client * client)
 	{
 
 	}
+/*
+	["data"] Type: Object - Value : Object
+		["alliance"] Type : Boolean - Value : False
+		["tV"] Type : Boolean - Value : True
+		["msg"] Type : String - Value : Lord <font color = '#FF0000'><b><u>LEGION57< / u>< / b>< / font> gained <b> < font color = '#00A2FF'>1 Ivory Horn< / font>< / b>(worth <b> < font color = '#FF0000'>60 < / font > < / b> Cents) from <b><font color = '#FF0000'>Amulet< / font>< / b>!
+		["noSenderSystemInfo"] Type : Boolean - Value : False
+
+
+	["data"] Type : Object - Value : Object
+		["alliance"] Type : Boolean - Value : False
+		["tV"] Type : Boolean - Value : False
+		["msg"] Type : String - Value : Lord <font color = '#FF0000'><b><u>LEGION57< / u>< / b>< / font> gained <b> < font color = '#00A2FF'>1 Ivory Horn< / font>< / b>(worth <b> < font color = '#FF0000'>60 < / font > < / b> Cents) from <b><font color = '#FF0000'>Amulet< / font>< / b>!
+		["noSenderSystemInfo"] Type : Boolean - Value : True*/
+
+
 }
 int32_t pshop::GetGambleCount(string item)
 {
