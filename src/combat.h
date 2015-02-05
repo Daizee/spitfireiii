@@ -54,8 +54,6 @@ public:
 
 	stTroops enddefenders;
 	stTroops endattackers;
-
-	stTroops resources;
 };
 
 

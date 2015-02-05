@@ -58,5 +58,15 @@ combat::~combat(void)
 
 bool combat::run()
 {
+	if (!tile)
+		return false;
+	if (tile->m_type == NPC)
+	{
+		//always attacks
+	}
+	else if (tile->m_type == CASTLE)
+	{
+		//check if gates are closed
+	}
 	return true;
 }

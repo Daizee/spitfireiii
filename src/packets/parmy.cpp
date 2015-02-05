@@ -49,6 +49,17 @@ void parmy::process()
 	obj2["data"] = amf3object();
 	amf3object & data2 = obj2["data"];
 
+	if (command == "setArmyGoOut")
+	{
+		VERIFYCASTLEID();
+		CHECKCASTLEID();
+
+		client->GetFocusCity()->m_gooutforbattle = data["isArmyGoOut"];
+		obj2["cmd"] = "army.setArmyGoOut";
+		data2["packageId"] = 0.0f;
+		data2["ok"] = 1;
+		gserver->SendObject(client, obj2);
+	}
 	if (command == "IsDropItemInCastle")
 	{
 		//??
@@ -254,6 +265,7 @@ void parmy::process()
 				gserver->SendObject(client, obj3);
 
 				city->SaveToDB();
+				hero->SaveToDB();
 			}
 			else
 			{
@@ -333,6 +345,7 @@ void parmy::process()
 				gserver->SendObject(client, obj3);
 
 				city->SaveToDB();
+				hero->SaveToDB();
 			}
 		}
 		else if (missiontype == 1 || missiontype == 2 || missiontype == 4)// not sure
