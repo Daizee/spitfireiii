@@ -444,6 +444,14 @@ struct stPackage
 	std::vector<stItem> items;
 };
 
+struct stCastleSign
+{
+	uint64_t tileid;
+	uint64_t id;//castle db id
+	string name;
+	int32_t x;
+	int32_t y;
+};
 #pragma endregion
 
 

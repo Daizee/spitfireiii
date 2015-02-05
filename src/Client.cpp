@@ -178,18 +178,29 @@ string Client::DBMisc()
 	return ss.str();
 }
 
+string Client::DBCastleSign()
+{
+	std::stringstream ss;
+
+	for (stCastleSign castle : m_castlesign)
+	{
+		ss << castle.tileid << ",";
+	}
+	return ss.str();
+}
+
 bool Client::SaveToDB()
 {
-	typedef Poco::Tuple<string, string, string, string, int32_t, string, int32_t, string, string, int32_t, int16_t, int32_t, double, double, double, bool, int8_t, string, int64_t> ClientSave;
+	typedef Poco::Tuple<string, string, string, string, int32_t, string, int32_t, string, string, int32_t, int16_t, int32_t, double, double, double, bool, int8_t, string, int64_t, string> ClientSave;
 
 
-	ClientSave savedata(DBBuffs(), DBResearch(), DBItems(), DBMisc(), m_status, m_ipaddress, m_sex, m_flag, m_faceurl, m_allianceid, m_alliancerank, m_cents, m_prestige, m_honor, m_lastlogin, m_changedface, m_icon, m_allianceapply, m_allianceapplytime);
+	ClientSave savedata(DBBuffs(), DBResearch(), DBItems(), DBMisc(), m_status, m_ipaddress, m_sex, m_flag, m_faceurl, m_allianceid, m_alliancerank, m_cents, m_prestige, m_honor, m_lastlogin, m_changedface, m_icon, m_allianceapply, m_allianceapplytime, DBCastleSign());
 
 
 	try
 	{
 		Session ses(m_main->serverpool->get());
-		ses << "UPDATE `accounts` SET buffs=?,`research`=?,items=?,misc=?,`status`=?,ipaddress=?,sex=?,flag=?,faceurl=?,allianceid=?,alliancerank=?,cents=?,prestige=?,honor=?,lastlogin=?,changedface=?,icon=?,allianceapply=?,allianceapplytime=? WHERE accountid=?;", use(savedata), use(m_accountid), now;
+		ses << "UPDATE `accounts` SET buffs=?,`research`=?,items=?,misc=?,`status`=?,ipaddress=?,sex=?,flag=?,faceurl=?,allianceid=?,alliancerank=?,cents=?,prestige=?,honor=?,lastlogin=?,changedface=?,icon=?,allianceapply=?,allianceapplytime=?,castlesign=? WHERE accountid=?;", use(savedata), use(m_accountid), now;
 		return true;
 	}
 	catch (Poco::Data::MySQL::ConnectionException& e)\
@@ -623,6 +634,37 @@ void Client::ParseMisc(string str)
 	}
 }
 
+void Client::ParseCastleSign(string str)
+{
+	if (str.length() > 0)
+	{
+		std::vector<string> tokens;
+		boost::split(tokens, str, boost::is_any_of(","));
+
+		Tile * tile = nullptr;
+		int32_t x = 0;
+		int32_t y = 0;
+
+
+		for (string t : tokens)
+		{
+			stCastleSign cst;
+			tile = m_main->map->GetTileFromID(atoi(t.c_str()));
+			if (tile->m_type == CASTLE)
+			{
+				cst.id = tile->m_castleid;
+				cst.name = tile->GetName();
+				short yfromid = short(atoi(t.c_str()) / m_main->map->mapsize);
+				short xfromid = short(atoi(t.c_str()) % m_main->map->mapsize);
+				cst.x = GETX;
+				cst.y = GETY;
+
+				m_castlesign.push_back(cst);
+			}
+		}
+	}
+}
+
 void Client::SetBuff(string type, string desc, int64_t endtime, int8_t param)
 {
 	for (int i = 0; i < m_buffs.size(); ++i)
@@ -949,6 +991,34 @@ void Client::BuffUpdate(string name, string desc, int64_t endtime, int8_t type)
 	data["buffBean"] = buffbean;
 
 	data["updateType"] = (int32_t)type;
+
+	m_main->SendObject(this, obj);
+	return;
+}
+
+void Client::CastleSignUpdate()
+{
+	amf3object obj = amf3object();
+	obj["cmd"] = "castle.castleSignInfoArr";
+	obj["data"] = amf3object();
+	amf3object & data = obj["data"];
+
+	amf3array castlesign;
+
+	for (stCastleSign castle : m_castlesign)
+	{
+		amf3object castleobj = amf3object();
+
+		castleobj["id"] = castle.id;
+		castleobj["name"] = castle.name;
+		castleobj["y"] = castle.y;
+		castleobj["x"] = castle.x;
+
+		castlesign.Add(castleobj);
+	}
+
+
+	data["castleSignInfoArr"] = castlesign;
 
 	m_main->SendObject(this, obj);
 	return;

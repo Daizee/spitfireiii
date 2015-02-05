@@ -28,6 +28,8 @@
 #include "../City.h"
 #include "../Client.h"
 #include "../Hero.h"
+#include "../Tile.h"
+#include "../Map.h"
 
 
 pcastle::pcastle(Server * server, request & req, amf3object & obj)
@@ -995,6 +997,49 @@ void pcastle::process()
 			}
 		}
 		UNLOCK(M_TIMEDLIST);
+		return;
+	}
+	if (command == "saveCastleSignList")
+	{
+		int32_t tx = data["x"];
+		int32_t ty = data["y"];
+		uint64_t tid = data["id"];//tile id
+		Tile * tile = nullptr;
+
+		stCastleSign cst;
+
+		cst.x = tx;
+		cst.y = ty;
+
+		tile = gserver->map->GetTileFromID(tid);
+
+		if (tile->m_type != CASTLE)
+		{
+			//need an error message
+			gserver->CreateError("castle.saveCastleSignList", -99, "Invalid coordinates");
+			return;
+		}
+
+		client->m_castlesign.push_back(cst);
+
+		client->CastleSignUpdate();
+		return;
+	}
+	if (command == "deleteCastleSignList")
+	{
+		uint64_t tid = data["id"];//tile id
+
+		for (std::vector<stCastleSign>::iterator iter = client->m_castlesign.begin(); iter != client->m_castlesign.end(); ++iter )
+		{
+			if (iter->id == tid)
+			{
+				client->m_castlesign.erase(iter);
+				client->CastleSignUpdate();
+				return;
+			}
+		}
+		//need an error message
+		gserver->CreateError("castle.saveCastleSignList", -99, "Invalid castle");
 		return;
 	}
 }

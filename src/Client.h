@@ -75,10 +75,13 @@ public:
 	void ParseItems(string str);
 	void ParseMisc(string str);
 
+	void ParseCastleSign(string str);
+
 	string DBBuffs();
 	string DBResearch();
 	string DBItems();
 	string DBMisc();
+	string DBCastleSign();
 
 	void SetBuff(string type, string desc, int64_t endtime, int8_t param = 0);
 	void RemoveBuff(string type);
@@ -150,6 +153,8 @@ public:
 	stItem m_items[DEF_MAXITEMS];
 	stResearch m_research[25];
 
+	std::vector<stCastleSign> m_castlesign;
+
 	stBuff * GetBuff(string type)
 	{
 		for (int32_t i = 0; i < m_buffs.size(); ++i)
@@ -176,6 +181,7 @@ public:
 	void EnemyArmyUpdate();
 	void FriendArmyUpdate();
 	void SelfArmyUpdate();
+	void CastleSignUpdate();
 	bool HasAlliance()
 	{
 		if (m_allianceid > 0)
