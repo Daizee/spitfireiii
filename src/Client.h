@@ -48,6 +48,7 @@ public:
 	amf3array SaleItems();
 	amf3array CastleArray();
 	amf3array BuffsArray();
+	amf3array CastleSignArray();
 	amf3object PlayerInfo();
 
 	bool SaveToDB();

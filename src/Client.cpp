@@ -284,7 +284,7 @@ amf3object  Client::ToObject()
 	obj["friendArmys"] = amf3array();
 	obj["saleTypeBeans"] = SaleTypeItems();
 	obj["autoFurlough"] = false;
-	obj["castleSignBean"] = amf3array();
+	obj["castleSignBean"] = CastleSignArray();
 	obj["furloughDay"] = 0;
 	obj["tutorialStepId"] = 0;//10101; -- can set any tutorial
 	obj["newReportCount_army"] = 0;
@@ -301,7 +301,22 @@ amf3object  Client::ToObject()
 
 	return obj;
 }
+amf3array Client::CastleSignArray()
+{
+	amf3array signarray = amf3array();
+	amf3object obj = amf3object();
 
+	for (stCastleSign castle : m_castlesign)
+	{
+		obj = amf3object();
+		obj["id"] = castle.tileid;
+		obj["name"] = castle.name;
+		obj["y"] = castle.y;
+		obj["x"] = castle.x;
+		signarray.Add(obj);
+	}
+	return signarray;
+}
 amf3array Client::Items()
 {
 	//	amf3object retobj;
