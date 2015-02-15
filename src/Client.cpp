@@ -44,6 +44,7 @@ extern Server * gserver;
 
 Client::Client(Server * core)
 {
+	m_mailpid = 1;
 	m_accountexists = false;
 	m_socknum = 0;
 	m_accountid = 0;
