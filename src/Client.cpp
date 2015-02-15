@@ -215,8 +215,6 @@ bool Client::SaveToDB()
 amf3object  Client::ToObject()
 {
 	amf3object obj = amf3object();
-	obj["newReportCount_trade"] = 0;
-	obj["newReportCount"] = 0;
 	int newmailsys = 0;
 	int newmailinbox = 0;
 	int newmailall = 0;
@@ -231,11 +229,27 @@ amf3object  Client::ToObject()
 			newmailall++;
 		}
 	}
+	int newreporttrade = 0;
+	int newreportall = 0;
+	int newreportother = 0;
+	for (stMail mail : m_mail)
+	{
+		if (!mail.isread())
+		{
+			if (mail.type_id == 2)
+				newreporttrade++;
+			else if (mail.type_id == 1)
+				newreportother++;
+			newreportall++;
+		}
+	}
+	obj["newReportCount_trade"] = newreporttrade;
 	obj["newMaileCount_system"] = newmailsys;
+	obj["newReportCount"] = newreportall;
 	obj["isSetSecurityCode"] = false;
 	obj["mapSizeX"] = gserver->mapsize;
 	obj["mapSizeY"] = gserver->mapsize;
-	obj["newReportCount_other"] = 0;
+	obj["newReportCount_other"] = newreportother;
 	obj["buffs"] = BuffsArray();
 	obj["gamblingItemIndex"] = 1;
 	obj["changedFace"] = m_changedface;

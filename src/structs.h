@@ -455,7 +455,17 @@ struct stMail
 	uint64_t readtime;
 	bool isread() { return (readtime > 0) ? 1 : 0; };
 };
+struct stReport
+{
+	stReport() { mailid = 0; playerid = 0; type_id = 0; senttime = 0; receivetime = 0; }
+	uint32_t mailid;
+	uint64_t playerid;
 	int8_t type_id;
+	string title;
+	string content;
+	uint64_t senttime;
+	uint64_t receivetime;
+	bool isread() { return (receivetime > 0) ? 1 : 0; };
 };
 
 #pragma endregion

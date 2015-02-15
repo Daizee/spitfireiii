@@ -873,6 +873,65 @@ void Server::run()
 		}
 	}
 
+
+	consoleLogger->information("Loading Report data.");
+
+
+
+
+	/*uint64_t alliancecount = 0;
+	{
+		Session ses2(serverpool->get());
+		Statement select(ses2);
+		select << "SELECT COUNT(*) AS a FROM `alliances`";
+		select.execute();
+		RecordSet rs(select);
+
+		rs.moveFirst();
+		alliancecount = rs.value("a").convert<uint64_t>();
+	}
+
+	count = 0;
+
+
+	{
+		Session ses2(serverpool->get());
+		Statement select(ses2);
+		select << "SELECT * FROM `alliances`";
+		select.execute();
+		RecordSet rs(select);
+
+		rs.moveFirst();
+
+
+
+		Alliance * alliance;
+
+		for (int i = 0; i < rs.rowCount(); ++i, rs.moveNext())
+		{
+			count++;
+			alliance = m_alliances->CreateAlliance(rs.value("name").convert<string>(), rs.value("leader").convert<int64_t>(), rs.value("id").convert<int64_t>());
+			//alliance->m_allianceid = msql->GetInt(i, "id");
+			alliance->ParseMembers(rs.value("members").convert<string>());
+			alliance->ParseRelation(&alliance->m_enemies, rs.value("enemies").convert<string>());
+			alliance->ParseRelation(&alliance->m_allies, rs.value("allies").convert<string>());
+			alliance->ParseRelation(&alliance->m_neutral, rs.value("neutrals").convert<string>());
+			alliance->m_name = rs.value("name").convert<string>();
+			alliance->m_founder = rs.value("founder").convert<string>();
+			alliance->m_note = rs.value("note").convert<string>();
+
+			if (alliance->m_allianceid >= m_allianceid)
+				m_allianceid = alliance->m_allianceid + 1;
+
+
+			if (alliancecount > 101)
+				if ((count) % ((alliancecount) / 100) == 0)
+				{
+				consoleLogger->information(Poco::format("%d%%", int((double(double(count) / alliancecount + 1))*double(100))));
+				}
+		}
+	}*/
+
 	consoleLogger->information("Validating players.");
 
 
