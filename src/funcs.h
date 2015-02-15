@@ -310,6 +310,27 @@ extern int asprintf(char **str, const char *fmt, ...);
 	a; \
 }
 
+#define SQLCATCH2(a, b)	catch (Poco::Data::MySQL::ConnectionException& e)\
+{\
+	b->consoleLogger->error(Poco::format("ConnectionException: %s", e.displayText() ));\
+	a; \
+}\
+	catch (Poco::Data::MySQL::StatementException& e)\
+{\
+	b->consoleLogger->error(Poco::format("StatementException: %s", e.displayText() ));\
+	a; \
+}\
+	catch (Poco::Data::MySQL::MySQLException& e)\
+{\
+	b->consoleLogger->error(Poco::format("MySQLException: %s", e.displayText() ));\
+	a; \
+}\
+	catch (Poco::InvalidArgumentException& e)\
+{\
+	b->consoleLogger->error(Poco::format("InvalidArgumentException: %s", e.displayText() ));\
+	a; \
+}
+
 
 
 //#define _HAS_ITERATOR_DEBUGGING 1

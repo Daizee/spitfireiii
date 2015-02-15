@@ -231,6 +231,7 @@ public:
 		shared_mutex alliance;
 		shared_mutex ranklist;
 		shared_mutex herocreate;
+		shared_mutex maillist;
 	} mtxlist;
 
 	// Max players allowed connected

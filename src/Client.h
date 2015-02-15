@@ -89,6 +89,7 @@ public:
 	int16_t GetItemCount(string type);
 	int16_t GetItemCount(int16_t type);
 
+	uint32_t m_mailpid;
 
 	int64_t m_accountid;
 	int64_t masteraccountid;
@@ -147,7 +148,7 @@ public:
 
 	std::vector<stPackage> m_packages;
 	std::vector<stBuff> m_buffs;
-	std::vector<stMail> m_mail;
+	std::list<stMail> m_mail;
 	stItem m_items[DEF_MAXITEMS];
 	stResearch m_research[25];
 

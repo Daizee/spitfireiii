@@ -46,6 +46,100 @@ void pmail::process()
 
 	if (command == "receiveMailList")
 	{
+		int pagesize = data["pageSize"];
+		int type = data["type"];
+		int pageno = data["pageNo"];
+
+		if (pageno == 0)
+			pageno++;
+
+
+		std::list<stMail> * maillist = &client->m_mail;
+
+		int32_t count = 0;
+		for (stMail mail : *maillist)
+		{
+			if (mail.type_id == type)
+				count++;
+		}
+
+		obj2["cmd"] = "mail.receiveMailList";
+		data2["packageId"] = 0.0f;
+		data2["ok"] = 1;
+		amf3array mails = amf3array();
+		gserver->mtxlist.maillist.lock_shared();
+		
+		std::list<stMail>::reverse_iterator iter;
+		if (pagesize <= 0 || pagesize > 20 || pageno < 0 || pageno > 100000)
+		{
+			gserver->SendObject(client, gserver->CreateError("mail.receiveMailList", -99, "Invalid data."));
+			gserver->mtxlist.maillist.unlock_shared();
+			return;
+		}
+
+		if ((pageno - 1)*pagesize > maillist->size())
+		{
+			gserver->SendObject(client, gserver->CreateError("mail.receiveMailList", -99, "Invalid page."));
+			gserver->mtxlist.maillist.unlock_shared();
+			return;
+		}
+		iter = maillist->rbegin();
+		for (int i = 0; i < (pageno - 1)*pagesize; ++i)
+		{
+			while (iter != maillist->rend())
+			{
+				if (iter->type_id == type)
+				{
+					iter++;
+					break;
+				}
+				iter++;
+			}
+		}
+
+		data2["pageNo"] = pageno;
+		data2["pageSize"] = pagesize;
+		if ((count % pagesize) == 0)
+			data2["totalPage"] = (count / pagesize);
+		else
+			data2["totalPage"] = (count / pagesize) + 1;
+		for (; iter != maillist->rend() && pagesize != 0; ++iter)
+		{
+			if (iter->type_id == type)
+			{
+				pagesize--;
+				amf3object temp = amf3object();
+				if (iter->playerid == 0)
+				{
+					temp["sender"] = "System";
+					temp["playerId"] = client->m_accountid;
+				}
+				else
+				{
+					Client * sender = gserver->GetClient(iter->playerid);
+					temp["sender"] = sender->m_playername;
+					temp["playerId"] = sender->m_accountid;
+				}
+				temp["mailid"] = iter->mailid;
+				temp["selected"] = false;
+				temp["title"] = iter->title;
+				temp["receiver"] = client->m_playername;
+				temp["receiveTime"] = iter->senttime;
+				temp["targetId"] = client->m_accountid;
+				temp["type_id"] = iter->type_id;
+				temp["isRead"] = iter->isread();
+				mails.Add(temp);
+			}
+		}
+
+		gserver->mtxlist.maillist.unlock_shared();
+
+		data2["mails"] = mails;
+		gserver->SendObject(client, obj2);
+		return;
+	}
+	/*if (command == "receiveMailList")
+	{
 		int32_t pageno = obj["pageNo"];
 		int32_t pagesize = obj["pageSize"];
 		int32_t type = obj["type"];
@@ -80,6 +174,60 @@ void pmail::process()
 		data3["totalPage"] = 0;
 		gserver->SendObject(client, obj3);
 		return;
+	}*/
+	if (command == "readMail")
+	{
+		uint32_t mailid = data["mailId"];
+
+		for (stMail & mail : client->m_mail)
+		{
+			if (mail.mailid == mailid)
+			{
+				if (mail.playerid != 0)
+				{
+					Client * sender = nullptr;
+					sender = gserver->GetClient(mail.playerid);
+					data2["sender"] = sender->m_playername;
+					data2["targetId"] = sender->m_accountid;//player who sent the mail - if System, set to reader's id
+
+				}
+				else
+				{
+					data2["sender"] = "System";
+					data2["targetId"] = client->m_accountid;
+				}
+				mail.readtime = unixtime();
+				data2["content"] = mail.content;
+				data2["mailid"] = mailid;
+				data2["title"] = mail.title;
+				data2["receiver"] = client->m_playername;
+				data2["receiveTime"] = mail.senttime;
+				data2["playerId"] = client->m_accountid;//player reading the mail
+				data2["ok"] = 1;
+				data2["type_id"] = mail.type_id;
+				data2["isRead"] = mail.isread();
+
+				obj2["cmd"] = "mail.readMail";
+
+				client->MailUpdate();
+				gserver->SendObject(client, obj2);
+
+				try
+				{
+					Session ses(gserver->serverpool->get());
+					Statement stmt = (ses << "UPDATE `mail` SET `readtime`=? WHERE `pid`=? AND `receiverid`=? LIMIT 1;",
+									  use(mail.readtime), use(mailid), use(client->m_accountid));
+					stmt.execute();
+					if (!stmt.done())
+					{
+						gserver->consoleLogger->information("Unable to update read mail.");
+						return;
+					}
+				}
+				SQLCATCH2(return;, gserver);
+				return;
+			}
+		}
 	}
 	if (command == "sendMail")
 	{
@@ -87,11 +235,12 @@ void pmail::process()
 		string title = data["title"];
 		string content = data["content"];
 
+/*
 		if (client->m_playername == username)
 		{
 			gserver->SendObject(client, gserver->CreateError("mail.sendMail", -21, "invalid mailing operation."));
 			return;
-		}
+		}*/
 
 		Client * tclient = gserver->GetClientByName(username);
 		if (!tclient)
@@ -99,25 +248,23 @@ void pmail::process()
 			gserver->SendObject(client, gserver->CreateError("mail.sendMail", -41, "Player " + username + " doesn't exist."));
 			return;
 		}
-		amf3object obj3;
-		obj3["cmd"] = "server.NewMail";
-		obj3["data"] = amf3object();
-		amf3object & data3 = obj3["data"];
 
-		data3["count_system"] = 0;
-		data3["count"] = 0;
-		data3["count_inbox"] = 0;
-		gserver->SendObject(tclient, obj3);
+		gserver->mtxlist.maillist.lock();
+		if (!gserver->CreateMail(client->m_playername, username, title, content, 1))
+		{
+			gserver->SendObject(client, gserver->CreateError("mail.sendMail", -42, "Error sending mail"));
+			gserver->mtxlist.maillist.unlock();
+			return;
+		}
 
-		amf3object obj4;
-		obj4["cmd"] = "server.NewMail";
-		obj4["data"] = amf3object();
-		amf3object & data4 = obj4["data"];
+		obj2["cmd"] = "mail.sendMail";
+		data2["packageId"] = 0.0;
+		data2["ok"] = 1;
+		gserver->SendObject(client, obj2);
 
-		data4["count_system"] = 0;
-		data4["count"] = 0;
-		data4["count_inbox"] = 0;
-		gserver->SendObject(tclient, obj4);
+		client->MailUpdate();
+		tclient->MailUpdate();
+		gserver->mtxlist.maillist.unlock();
 		return;
 	}
 	if (command == "reportBug")
@@ -131,6 +278,7 @@ void pmail::process()
 		data2["errorMsg"] = "success";
 		data2["packageId"] = 0.0f;
 		data2["ok"] = 1;
+		gserver->SendObject(client, obj2);
 	}
 }
 

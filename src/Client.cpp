@@ -215,20 +215,34 @@ amf3object  Client::ToObject()
 {
 	amf3object obj = amf3object();
 	obj["newReportCount_trade"] = 0;
-	obj["newMaileCount_system"] = 0;
 	obj["newReportCount"] = 0;
+	int newmailsys = 0;
+	int newmailinbox = 0;
+	int newmailall = 0;
+	for (stMail mail : m_mail)
+	{
+		if (!mail.isread())
+		{
+			if (mail.type_id == 1)
+				newmailinbox++;
+			else if (mail.type_id == 2)
+				newmailsys++;
+			newmailall++;
+		}
+	}
+	obj["newMaileCount_system"] = newmailsys;
 	obj["isSetSecurityCode"] = false;
 	obj["mapSizeX"] = gserver->mapsize;
 	obj["mapSizeY"] = gserver->mapsize;
 	obj["newReportCount_other"] = 0;
 	obj["buffs"] = BuffsArray();
-	obj["gamblingItemIndex"] = 12;
-	obj["changedFace"] = false;
+	obj["gamblingItemIndex"] = 1;
+	obj["changedFace"] = m_changedface;
 	obj["castles"] = CastleArray();
 	obj["playerInfo"] = PlayerInfo();
 	obj["redCount"] = 0;
 	obj["usePACIFY_SUCCOUR_OR_PACIFY_PRAY"] = 1;//always 1?
-	obj["newMaileCount_inbox"] = 0;
+	obj["newMaileCount_inbox"] = newmailinbox;
 
 	string s;
 	{
@@ -277,9 +291,9 @@ amf3object  Client::ToObject()
 	obj["furloughDay"] = 0;
 	obj["tutorialStepId"] = 0;//10101; -- can set any tutorial
 	obj["newReportCount_army"] = 0;
-	obj["newMailCount"] = 0;
+	obj["newMailCount"] = newmailall;
 	obj["furlough"] = false;
-	obj["gameSpeed"] = 5;
+	obj["gameSpeed"] = 1;
 	obj["enemyArmys"] = amf3array();
 	obj["currentTime"] = (double)unixtime();
 	obj["items"] = Items();
@@ -909,7 +923,7 @@ void Client::MailUpdate()
 
 	for (stMail mail : m_mail)
 	{
-		if (!mail.isread)
+		if (!mail.isread())
 		{
 			totalmail++;
 			if (mail.type_id == 1)

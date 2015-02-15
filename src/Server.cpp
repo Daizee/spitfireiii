@@ -589,6 +589,36 @@ void Server::run()
 
 			client->CheckBeginner(false);
 
+			{
+				Session ses(serverpool->get());
+				Statement select(ses);
+				select << "SELECT * FROM `mail` WHERE `receiverid`=" << client->m_accountid;
+				select.execute();
+				RecordSet rs(select);
+
+				rs.moveFirst();
+
+				stMail mail;
+
+				for (int i = 0; i < rs.rowCount(); ++i, rs.moveNext())
+				{
+					mail.title = rs.value("title").convert<string>();
+					mail.content = rs.value("content").convert<string>();
+					mail.senttime = rs.value("senttime").convert<uint64_t>();
+					mail.readtime = rs.value("readtime").convert<uint64_t>();
+					mail.mailid = rs.value("pid").convert<int32_t>();
+					mail.playerid = rs.value("senderid").convert<int64_t>();
+					mail.type_id = rs.value("type").convert<int8_t>();
+
+					client->m_mail.push_back(mail);
+					if (client->m_mailpid <= mail.mailid)
+						client->m_mailpid = mail.mailid + 1;
+				}
+			}
+
+
+
+
 			if (accountcount > 101)
 			{
 				if ((count) % ((accountcount) / 100) == 0)
@@ -2825,24 +2855,43 @@ bool Server::CreateMail(string sender, string receiver, string subject, string c
 	}
 
 	//player id of 0 is SYSTEM
-	int64_t playerid = (sender == "SYSTEM") ? 0 : snd->m_playerid;
+	int64_t playerid = (sender == "SYSTEM") ? 0 : snd->m_accountid;
 
 	int64_t time = unixtime();
 
-	Session ses(serverpool->get());
-	Statement stmt = (ses << "INSERT INTO `mail` (`ownerid`, `receiveid`, `subject`, `content`, `time`, `sendtime`, `type`, `read`) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
-					  use(playerid), use(rcv->m_playerid), use(subject), use(content), use(0), use(time), use(type), use(0));
-	stmt.execute();
-	if (!stmt.done())
+	try
 	{
-		consoleLogger->information("Unable to send mail.");
-		return false;
+		Session ses(serverpool->get());
+		Statement stmt = (ses << "INSERT INTO `mail` (`senderid`, `receiverid`, `title`, `content`, `senttime`, `type`, `pid`) VALUES (?, ?, ?, ?, ?, ?, ?);",
+						  use(playerid), use(rcv->m_accountid), use(subject), use(content), use(time), use(type), use(snd->m_mailpid));
+		stmt.execute();
+		if (!stmt.done())
+		{
+			consoleLogger->information("Unable to send mail.");
+			return false;
+		}
+		Statement lastinsert = (ses << "SELECT LAST_INSERT_ID()");
+		lastinsert.execute();
+		RecordSet lsi(lastinsert);
+		lsi.moveFirst();
+		int32_t lsiv = lsi.value("LAST_INSERT_ID()").convert<int32_t>();
 	}
-	Statement lastinsert = (ses << "SELECT LAST_INSERT_ID()");
-	lastinsert.execute();
-	RecordSet lsi(lastinsert);
-	lsi.moveFirst();
-	int32_t lsiv = lsi.value("LAST_INSERT_ID()").convert<int32_t>();
+	SQLCATCH(return false;);
+
+
+
+	stMail mail;
+	mail.content = content;
+	mail.title = subject;
+	mail.type_id = type;
+	mail.senttime = time;
+	mail.mailid = snd->m_mailpid++;
+	mail.playerid = playerid;
+
+	rcv->m_mail.push_back(mail);
+
+	mail.type_id = 3;
+	snd->m_mail.push_back(mail);
 
 	//rcv
 

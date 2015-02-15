@@ -445,16 +445,16 @@ struct stPackage
 };
 struct stMail
 {
-	string sender;
-	string receiver;
+	stMail() { mailid = 0; playerid = 0; type_id = 0; senttime = 0; readtime = 0; }
+	uint32_t mailid;
+	uint64_t playerid;
+	int8_t type_id;
 	string title;
 	string content;
-	int64_t senttime;
-	int64_t receivetime;
-	int64_t mailid;
-	int64_t playerid;
-	int64_t targetid;
-	bool isread;
+	uint64_t senttime;
+	uint64_t readtime;
+	bool isread() { return (readtime > 0) ? 1 : 0; };
+};
 	int8_t type_id;
 };
 
