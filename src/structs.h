@@ -455,8 +455,6 @@ struct stMail
 	uint64_t readtime;
 	bool isread() { return (readtime > 0) ? 1 : 0; };
 };
-	int8_t type_id;
-};
 
 #pragma endregion
 
