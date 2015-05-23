@@ -35,3 +35,4 @@
 *.xml
 include/
 *.ipch
+*.ilk

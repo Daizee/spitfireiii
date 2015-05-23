@@ -4,7 +4,7 @@
 
 config =
 {
-	bindip = "0.0.0.0",
+	bindip = "::1",
 	bindport = 443,
 	maxplayers = 2000,
 	mapsize = 800,

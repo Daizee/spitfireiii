@@ -589,6 +589,7 @@ void Server::run()
 
 			client->CheckBeginner(false);
 
+			try
 			{
 				Session ses(serverpool->get());
 				Statement select(ses);
@@ -615,6 +616,7 @@ void Server::run()
 						client->m_mailpid = mail.mailid + 1;
 				}
 			}
+			SQLCATCH(return;);
 
 
 
